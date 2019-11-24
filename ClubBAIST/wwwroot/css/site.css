@@ -70,6 +70,20 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+.input-validation-error, .input-validation-error:focus {
+    background: #ffccba;
+    color: #d63301;
+}
+
+.form-control.input-validation-error:focus {
+    border-color: #d63301;
+    box-shadow: 0 0 0 0.2rem rgba(255, 123, 123, 0.5);
+}
+
+.field-validation-error {
+    color: #d63301;
+}
+
 .my-custom-scrollbar {
     position: relative;
     height: 200px;

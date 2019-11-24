@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using ClubBaist.Controllers;
@@ -12,8 +14,12 @@ namespace ClubBaist.Pages
     public class CreateTeeTimeModel : PageModel
     {
 
-        [BindProperty] 
+
+        [BindProperty,Required, RegularExpression(@"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))",ErrorMessage = "Must be in YYYY-MM-DD format."), StringLength(10)] 
         public string date { get; set; }
+
+        [TempData]
+        public bool Confirmation { get; set; }
 
         [TempData]
         public string Alert { get; set; }
@@ -23,6 +29,9 @@ namespace ClubBaist.Pages
 
         [BindProperty]
         public DailyTeeSheet dailyTeeSheet { get; set; }
+
+        [BindProperty, DisplayName("Member Number")]
+        public int MemberNumber { get; set; }
 
         [BindProperty]
         public List<string> availableTeeTimes { get; set; }
@@ -37,7 +46,7 @@ namespace ClubBaist.Pages
         public string Golfer3 { get; set; }
         [BindProperty]
         public string Golfer4 { get; set; }
-        [BindProperty]
+        [BindProperty, DisplayName("Desired Time")]
         public string selectedTime { get; set; }
 
 
@@ -45,40 +54,59 @@ namespace ClubBaist.Pages
         //public DailyTeeSheet dailyTeeSheet { get; set; }
         public void OnGet()
         {
-
         }
 
         public IActionResult OnPostFind()
         {
-            CBS RequestDirector = new CBS();
 
-            DateTime.TryParse(date, out DateTime selectedDate);
-
-            //DailyTeeSheet dailyTeeSheet = new DailyTeeSheet();
-
-            dailyTeeSheet = RequestDirector.ViewDailyTeeSheet(selectedDate);
-
-
-            if (dailyTeeSheet.TeeTimes.Count == 0)
+            if (ModelState.IsValid)
             {
-                dailyTeeSheet = null;
-                Alert = $"Could Not Find Daily Tee Sheet for {date}";
-                TempData["Danger"] = true;
-            }
-            else
-            {
-                foreach (var t in dailyTeeSheet.TeeTimes)
+                CBS RequestDirector = new CBS();
+
+                DateTime.TryParse(date, out DateTime selectedDate);
+
+                if (selectedDate > DateTime.Today + TimeSpan.FromDays(7) || selectedDate < DateTime.Today)
                 {
-                    DateTime time = new DateTime((t.Time.Ticks));
-                    if (t.Golfer1 == null)
-                        
-                        availableTeeTimes.Add(time.ToString("t"));
+                    TempData["Danger"] = true;
+                    if (selectedDate < DateTime.Today)
+                    {
+                        Alert = $"Cannot create a tee time for a passed date.";
+                    }
+                    else
+                    {
+                        Alert = $"Cannot create a tee time more than 7 days in advance.";
+                    }
+                    
+                    dailyTeeSheet = null;
+                    return Page();
                 }
 
-                selectedDateTemp = selectedDate;
+                //DailyTeeSheet dailyTeeSheet = new DailyTeeSheet();
 
-                return Page();
+                dailyTeeSheet = RequestDirector.ViewDailyTeeSheet(selectedDate);
+
+
+                if (dailyTeeSheet.TeeTimes.Count == 0)
+                {
+                    dailyTeeSheet = null;
+                    Alert = $"Could Not Find Daily Tee Sheet for {date}";
+                    TempData["Danger"] = true;
+                }
+                else
+                {
+                    foreach (var t in dailyTeeSheet.TeeTimes)
+                    {
+                        DateTime time = new DateTime((t.Time.Ticks));
+                        if (t.Golfer1 == null)
+                            availableTeeTimes.Add(time.ToString("t"));
+                    }
+
+                    selectedDateTemp = selectedDate;
+
+                    return Page();
+                }
             }
+
 
 
 
@@ -87,14 +115,14 @@ namespace ClubBaist.Pages
 
         public IActionResult OnPostCreateTeeTime()
         {
-            bool Confirmation = false;
+            Confirmation = false;
             CBS RequestDirector = new CBS();
 
             DailyTeeSheet verifyTeeSheet = new DailyTeeSheet();
 
             TeeTime newTeeTime = new TeeTime();
 
-            TimeSpan time = Convert.ToDateTime(selectedTime).TimeOfDay;
+            TimeSpan time = Convert.ToDateTime("07:00").TimeOfDay;
 
             newTeeTime.Date = selectedDateTemp;
             newTeeTime.Time = time;
@@ -103,25 +131,20 @@ namespace ClubBaist.Pages
             newTeeTime.Golfer3 = Golfer3;
             newTeeTime.Golfer4 = Golfer4;
 
-            //Used to Check if the Tee Time has been taken during the time it took to post
-            verifyTeeSheet = RequestDirector.ViewDailyTeeSheet(selectedDateTemp);
-            foreach (var t in verifyTeeSheet.TeeTimes)
-            {
-                if (t.Time == time && t.Golfer1 != null)
-                    Confirmation = false;
-                dailyTeeSheet = null;
-                return Page();
-            }
-
             Confirmation = RequestDirector.CreateTeeTime(newTeeTime);
 
             if (Confirmation)
             {
-                dailyTeeSheet = null;
-
-                return Page();
+                return RedirectToPage("/Index");
             }
-
+            else
+            {
+                TempData["Danger"] = true;
+                Alert = $"Could Not Create Tee Time";
+                dailyTeeSheet = null;
+            }
+            
+            
             return Page();
         }
     }

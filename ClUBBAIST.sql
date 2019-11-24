@@ -147,6 +147,35 @@ AS
         RETURN @ReturnCode
 GO
 
+-- Insert rows into table 'Golfer'
+INSERT INTO Golfer
+( -- columns toMembershipNumberata into
+ MemberNumber, MembershipLevel, [Name]
+)
+VALUES
+( -- first row: values for the columns in the list above
+ 1, 'Gold', 'Chase'
+),
+( -- first row: values for the columns in the list above
+ 2, 'Bronze', 'Haley'
+),( -- first row: values for the columns in the list above
+ 3, 'Silver', 'Rob'
+),( -- first row: values for the columns in the list above
+ 4, 'Gold', 'John'
+),( -- first row: values for the columns in the list above
+ 5, 'Gold', 'Pam'
+),( -- first row: values for the columns in the list above
+ 6, 'Silver', 'Maurice'
+),( -- first row: values for the columns in the list above
+ 7, 'Bronze', 'Jack'
+),( -- first row: values for the columns in the list above
+ 8, 'Gold', 'Marty'
+),( -- first row: values for the columns in the list above
+ 9, 'Gold', 'Jessica'
+)
+-- add more rows here
+GO
+
 
 -- Insert rows into table 'TeeTime'
 INSERT INTO TeeTime
