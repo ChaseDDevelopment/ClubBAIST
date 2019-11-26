@@ -56,7 +56,7 @@ GO
 -- Create the table in the specified schema
 CREATE TABLE StandingTeeTime
 (
-    StandingTeeTimeID INT NOT NULL PRIMARY KEY, -- primary key column
+    StandingTeeTimeID INT IDENTITY(1,1) PRIMARY KEY, -- primary key column
     MemberNumber1 INT NOT NULL,
     MemberNumber2 INT NOT NULL,
     MemberNumber3 INT NOT NULL,
@@ -66,11 +66,12 @@ CREATE TABLE StandingTeeTime
     MemberName3 [NVARCHAR](25) NOT NULL,
     MemberName4 [NVARCHAR](25) NOT NULL,
     DayOfWeek DATETIME NOT NULL,
-    [Time] DATETIME NOT NULL,
+    [Time] TIME NOT NULL,
     StartDate DATETIME NOT NULL,
-    EndDate DATETIME NOT NULL
+    EndDate DATETIME NOT NULL,
+    [Status] BIT NOT NULL DEFAULT 0
     -- specify more columns here
-);
+)
 GO
 
 IF EXISTS (
@@ -147,6 +148,87 @@ AS
         RETURN @ReturnCode
 GO
 
+
+IF EXISTS(
+    SELECT *
+        FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_NAME = N'CreateStandingTeeTimeRequest'
+)
+DROP PROCEDURE CreateStandingTeeTimeRequest
+GO
+CREATE PROCEDURE CreateStandingTeeTimeRequest
+(
+    @MemberNumber1 INT = NULL,
+    @MemberNumber2 INT = NULL,
+    @MemberNumber3 INT = NUll,
+    @MemberNumber4 INT = NULL,
+    @MemberName1 [NVARCHAR](25) = NULL,
+    @MemberName2 [NVARCHAR](25) = NULL,
+    @MemberName3 [NVARCHAR](25) = NULL,
+    @MemberName4 [NVARCHAR](25) = NULL,
+    @DayOfWeek DATETIME = NULL,
+    @Time TIME = NULL,
+    @StartDate DATETIME = NULL,
+    @EndDate DATETIME = NULL
+)
+AS 
+    DECLARE @ReturnCode INT
+    SET @ReturnCode = 1
+
+    IF @MemberNumber1 IS NULL AND @MemberNumber2 IS NULL AND @MemberNumber3 IS NULL AND @MemberNumber4 IS NULL AND @MemberName1 IS NULL AND @MemberName2 IS NULL AND @MemberName3 IS NULL AND @MemberName4 IS NULL AND @DayOfWeek IS NULL AND @Time IS NULL AND @StartDate IS NULL AND @EndDate IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: All',16,1)
+    ELSE
+    IF @MemberNumber1 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber1',16,1)
+    ELSE
+    IF @MemberNumber2 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber2',16,1)
+    ELSE
+    IF @MemberNumber3 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber3',16,1)
+    ELSE
+    IF @MemberNumber4 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber4',16,1)
+    ELSE
+    IF @MemberName1 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName1',16,1)
+    ELSE
+    IF @MemberName2 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName2',16,1)
+    ELSE
+    IF @MemberName3 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName3',16,1)
+    ELSE
+    IF @MemberName4 IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName4',16,1)
+    ELSE
+    IF @DayOfWeek IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @DayOfWeek',16,1)
+    ELSE
+    IF @Time IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @[Time]',16,1)
+    ELSE
+    IF @StartDate IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @StartDate',16,1)
+    ELSE
+    IF @EndDate IS NULL
+        RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @EndDate',16,1)
+    ELSE
+        BEGIN
+        INSERT INTO StandingTeeTime
+            (MemberNumber1,MemberNumber2, MemberNumber3, MemberNumber4, MemberName1, MemberName2, MemberName3, MemberName4, DayOfWeek, [Time],StartDate,EndDate)
+        VALUES 
+            (@MemberNumber1, @MemberNumber2, @MemberNumber3, @MemberNumber4, @MemberName1, @MemberName2, @MemberName3, @MemberName4, @DayOfWeek, @Time, @StartDate, @EndDate)
+
+        IF @@ERROR = 0
+            SET @ReturnCode = 0
+        ELSE RAISERROR('CreateTeeTime Failed - Insert Error in Database',16,1)
+        END
+        RETURN @ReturnCode
+GO
+
+
+
 -- Insert rows into table 'Golfer'
 INSERT INTO Golfer
 ( -- columns toMembershipNumberata into
@@ -218,3 +300,5 @@ VALUES
 GO
 
 Execute FindDailyTeeSheet '2020-08-15'
+
+Execute CreateStandingTeeTimeRequest '1','2','3','4','Chase','Haley','ROB','Stark', '2020-08-26','00:07:00','2020-08-26','2020-08-26'

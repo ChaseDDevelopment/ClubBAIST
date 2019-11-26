@@ -10,6 +10,9 @@ namespace ClubBaist.Pages
 {
     public class IndexModel : PageModel
     {
+        [TempData]
+        public string Alert { get; set; }
+
         private readonly ILogger<IndexModel> _logger;
 
         public IndexModel(ILogger<IndexModel> logger)

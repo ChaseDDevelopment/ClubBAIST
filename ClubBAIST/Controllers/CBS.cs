@@ -20,10 +20,19 @@ namespace ClubBaist.Controllers
 
         public bool CreateTeeTime(TeeTime selectedTeeTime)
         {
-            bool Success = false;
+            bool Confirmation = false;
             TeeTimes dataManager = new TeeTimes();
-            Success = dataManager.CreateTeeTime(selectedTeeTime);
-            return Success;
+            Confirmation = dataManager.CreateTeeTime(selectedTeeTime);
+            return Confirmation;
+        }
+
+        public bool CreateStandingTeeTimeRequest(StandingTeeTime request)
+        {
+            bool Confirmation = false;
+            StandingTeeTimes dataManager = new StandingTeeTimes();
+            Confirmation = dataManager.CreateStandingTeeTimeRequest(request);
+            return Confirmation;
+
         }
     }
 }

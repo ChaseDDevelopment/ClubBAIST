@@ -13,45 +13,26 @@ namespace ClubBaist.Pages
 {
     public class CreateTeeTimeModel : PageModel
     {
-
-
-        [BindProperty,Required, RegularExpression(@"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))",ErrorMessage = "Must be in YYYY-MM-DD format."), StringLength(10)] 
+        [BindProperty]
+        [Required]
+        [RegularExpression(@"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))", ErrorMessage =
+            "Must be in YYYY-MM-DD format.")]
+        [StringLength(10)]
         public string date { get; set; }
+        [TempData] public bool Confirmation { get; set; }
+        [TempData] public string Alert { get; set; }
+        [TempData] public DateTime selectedDateTemp { get; set; }
+        [BindProperty] public DailyTeeSheet dailyTeeSheet { get; set; }
+        [BindProperty] public List<string> availableTeeTimes { get; set; }
+        [BindProperty] public string Golfer1 { get; set; }
+        [BindProperty] public string Golfer2 { get; set; }
 
-        [TempData]
-        public bool Confirmation { get; set; }
-
-        [TempData]
-        public string Alert { get; set; }
-
-        [TempData]
-        public DateTime selectedDateTemp { get; set; }
-
+        [BindProperty] public string Golfer3 { get; set; }
+        [BindProperty] public string Golfer4 { get; set; }
         [BindProperty]
-        public DailyTeeSheet dailyTeeSheet { get; set; }
-
-        [BindProperty, DisplayName("Member Number")]
-        public int MemberNumber { get; set; }
-
-        [BindProperty]
-        public List<string> availableTeeTimes { get; set; }
-
-
-        [BindProperty]
-        public string Golfer1 { get; set; }
-        [BindProperty]
-        public string Golfer2 { get; set; }
-
-        [BindProperty]
-        public string Golfer3 { get; set; }
-        [BindProperty]
-        public string Golfer4 { get; set; }
-        [BindProperty, DisplayName("Desired Time")]
+        [DisplayName("Desired Time")]
         public string selectedTime { get; set; }
 
-
-        //[TempData]
-        //public DailyTeeSheet dailyTeeSheet { get; set; }
         public void OnGet()
         {
         }
@@ -81,7 +62,6 @@ namespace ClubBaist.Pages
                     return Page();
                 }
 
-                //DailyTeeSheet dailyTeeSheet = new DailyTeeSheet();
 
                 dailyTeeSheet = RequestDirector.ViewDailyTeeSheet(selectedDate);
 
@@ -122,7 +102,7 @@ namespace ClubBaist.Pages
 
             TeeTime newTeeTime = new TeeTime();
 
-            TimeSpan time = Convert.ToDateTime("07:00").TimeOfDay;
+            TimeSpan time = Convert.ToDateTime(selectedTime).TimeOfDay;
 
             newTeeTime.Date = selectedDateTemp;
             newTeeTime.Time = time;
@@ -135,6 +115,7 @@ namespace ClubBaist.Pages
 
             if (Confirmation)
             {
+                TempData["Alert"] = $"Successfully Created Tee Time";
                 return RedirectToPage("/Index");
             }
             else

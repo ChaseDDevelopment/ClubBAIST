@@ -18,7 +18,7 @@ namespace ClubBaist.Models
         public string MemberName3 { get; set; }
         public string MemberName4 { get; set; }
         public DateTime DayOfWeek { get; set; }
-        public DateTime Time { get; set; }
+        public TimeSpan Time { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
