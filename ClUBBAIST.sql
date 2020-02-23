@@ -43,8 +43,35 @@ GO
 CREATE TABLE Golfer
 (
     MemberNumber INT NOT NULL PRIMARY KEY, -- primary key column
-    MembershipLevel [NVARCHAR](25) NOT NULL,
-    Name [NVARCHAR](25) NOT NULL
+    MembershipLevel INT NOT NULL,
+    FirstName NVARCHAR(25) NOT NULL,
+    LastName NVARCHAR(25) NOT NULL,
+    [Password] NVARCHAR(25) NOT NULL,
+    [Address] NVARCHAR(50) NULL,
+    PostalCode NVARCHAR(6) NULL,
+    Phone NVARCHAR(10) NULL,
+    AltPhone NVARCHAR(10) NULL,
+    Email NVARCHAR(100) NULL,
+    DateOfBirth DATE NULL,
+    Occupation NVARCHAR(50) NULL,
+    CompanyName NVARCHAR(50) NULL,
+    CompanyAddress NVARCHAR(50) NULL,
+    CompanyPostalCode NVARCHAR(6) NULL,
+    CompanyPhone NVARCHAR(10) NULL,
+    MembershipStartDate DATE NULL,
+    Shareholder BIT NULL,
+    Approved CHAR NULL
+);
+GO
+
+IF OBJECT_ID('MembershipLevel','U') IS NOT NULL
+DROP TABLE MembershipLevel
+GO
+
+CREATE TABLE MembershipLevel
+(
+    MembershipLevel INT NOT NULL PRIMARY KEY,
+    [Description] NVARCHAR(40) NOT NULL
 );
 GO
 
@@ -232,32 +259,46 @@ GO
 -- Insert rows into table 'Golfer'
 INSERT INTO Golfer
 ( -- columns toMembershipNumberata into
- MemberNumber, MembershipLevel, [Name]
+ MemberNumber, MembershipLevel, FirstName, LastName, [Password], [Address], PostalCode, Phone, AltPhone, Email, DateOfBirth, Occupation, CompanyName, CompanyAddress, CompanyPostalCode, CompanyPhone, MembershipStartDate, Shareholder, Approved
 )
 VALUES
-( -- first row: values for the columns in the list above
- 1, 'Gold', 'Chase'
+(
+ 1, 2, 'Chase', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '7804493634', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15', 1, 'N'
 ),
-( -- first row: values for the columns in the list above
- 2, 'Bronze', 'Haley'
-),( -- first row: values for the columns in the list above
- 3, 'Silver', 'Rob'
-),( -- first row: values for the columns in the list above
- 4, 'Gold', 'John'
-),( -- first row: values for the columns in the list above
- 5, 'Gold', 'Pam'
-),( -- first row: values for the columns in the list above
- 6, 'Silver', 'Maurice'
-),( -- first row: values for the columns in the list above
- 7, 'Bronze', 'Jack'
-),( -- first row: values for the columns in the list above
- 8, 'Gold', 'Marty'
-),( -- first row: values for the columns in the list above
- 9, 'Gold', 'Jessica'
+(
+ 2, 2, 'Haley', 'Hennig', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '', 'HHennig@gmail.com', '1998-07-20', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15', 1, 'Y'
+),
+(
+ 3, 3, 'Robert', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'WHoKnows', '', '', '', '2025-02-15', 0, 'Y'
+),
+(
+4, 1, 'Club', 'Admin', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','', 0, 'N'  
 )
--- add more rows here
+ --add more rows here
 GO
 
+INSERT INTO MembershipLevel
+(
+    MembershipLevel, [Description]
+)
+VALUES
+(
+    '1','MembershipCommittee'
+),
+(
+    '2', 'Gold'
+),
+(
+    '3', 'Silver'
+),
+(
+    '4', 'Bronze'
+),
+(
+    '5', 'Copper'
+)
+
+GO
 
 -- Insert rows into table 'TeeTime'
 INSERT INTO TeeTime

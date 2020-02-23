@@ -5,12 +5,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using ClubBaist.Controllers;
+using ClubBaist.CustomAtrritutes;
 using ClubBaist.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ClubBaist.Pages
 {
+    //Require that the user be logged in at all times. 
+    [UnAuthorized]
     public class CreateTeeTimeModel : PageModel
     {
         [BindProperty]
@@ -127,6 +130,12 @@ namespace ClubBaist.Pages
             
             
             return Page();
+        }
+
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("/Index");
         }
     }
 }

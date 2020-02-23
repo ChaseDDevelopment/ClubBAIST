@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "PageLevelPermission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="padding-top:50px;"></div>
+<h2>Page Level Permission</h2>
+
+<div class="row">
+    <div style="padding-top:20px;">
+        <div>
+            <label>Name</label>
+        </div>
+        <div>
+            <input type="text" id="text1" />
+        </div>
+        <div style="padding-top:10px;">
+            <label>Date of Birth</label>
+        </div>
+        <div>
+            <input type="text" id="text1" />
+        </div>
+        <div style="padding-top:10px;">
+            <label>Department</label>
+        </div>
+        <div>
+            <input type="text" id="text1" />
+        </div>
+        <div style="padding-top:10px;">
+            <label>Role</label>
+        </div>
+        <div>
+            <input type="text" id="text1" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div style="padding-top:20px;">
+        @if (User.Identity.HavePermission("WRITE_ACCESS") == true)
+        {
+            <button type="button" id="btn" class="btn btn-primary btn-lg">Save</button><span style="color:orangered;padding-left:30px;">'@User.Identity.Name' have WRITE permission to add data</span>
+        }
+        else
+        {
+            <button type="button" id="btn" disabled="disabled" class="btn btn-primary btn-lg">Save</button><span style="color:orangered;padding-left:30px;">'@User.Identity.Name' DO NOT have WRITE permission to add data, Save button Disabled</span>
+        }
+    </div>
+</div>

@@ -20,5 +20,12 @@ namespace ClubBaist.Pages
         public void OnGet()
         {
         }
+
+
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("/Index");
+        }
     }
 }

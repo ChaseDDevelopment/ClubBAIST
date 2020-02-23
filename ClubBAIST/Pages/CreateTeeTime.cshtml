@@ -1,4 +1,5 @@
 ﻿@page
+@using ClubBaist.CustomAtrritutes
 @using Microsoft.EntityFrameworkCore.Internal
 @model ClubBaist.Pages.CreateTeeTimeModel
 @{
@@ -14,8 +15,14 @@
     </script>
 }
 
-<h2 style="text-align: center;">Create Tee Time</h2>
 
+@*Page Level Authorization by Custom Claim*@
+@*@if (User.HasClaim("MembershipLevel".ToString(), "2"))
+{ 
+    <p>THis is hidden if you are not a level 2 </p>
+}*@
+
+<h2 style="text-align: center;">Create Tee Time</h2>
 @if (TempData["Danger"] is true)
 {
     <div class="row">
@@ -147,6 +154,8 @@
                             <select class="form-control" asp-for="selectedTime">
                                 @foreach (var item in Model.availableTeeTimes)
                                 {
+                                    
+
                                     <option value="@item">@item.ToString()</option>
 
                                 }
