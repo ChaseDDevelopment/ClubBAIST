@@ -14,10 +14,17 @@
             <div class="col-md-3"></div>
             <div class="col-md-offset-3 col-md-6">
                 <div class="alert alert-success" style="text-align: center;" role="alert">
-                    @Model.Alert 
+                    @Model.Alert
                 </div>
             </div>
             <div class="col-md-3"></div>
         </div>
+    }
+}
+
+@{
+    if (User.Identity.IsAuthenticated)
+    {
+        <H1>AUTHENTICATED</H1>
     }
 }

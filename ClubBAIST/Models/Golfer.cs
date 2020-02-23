@@ -8,7 +8,7 @@ namespace ClubBaist.Models
     public class Golfer
     {
         public int MemberNumber { get; set; }
-        public int MemberShipLevel { get; set; }
+        public int MembershipLevel { get; set; }
         public string Name { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -1,0 +1,37 @@
+﻿@page
+@model ClubBaist.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+@{
+    if (User.Identity.IsAuthenticated)
+    {
+        <H1>AUTHENTICATED</H1>
+    }
+}
+<h1>Login</h1>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form method="post">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="MemberNumber">MemberNumber:</label>
+                    <input asp-for="MemberNumber" class="form-control form-control-sm" />
+                    <span asp-validation-for="MemberNumber"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Password">Password:</label>
+                    <input asp-for="Password" class="form-control form-control-sm" placeholder="YYYY-MM-DD" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                    <div class="form-group text-right col-md-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+        </form>
+    </div>
+    <div class="col-md-3"></div>
+</div>

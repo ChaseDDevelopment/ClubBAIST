@@ -139,5 +139,11 @@ namespace ClubBaist.Pages
             return Page();
         }
 
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("/Index");
+        }
+
     }
 }

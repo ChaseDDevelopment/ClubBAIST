@@ -1,0 +1,100 @@
+﻿@model LoginDemo.Models.User
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div style="padding-top:50px;"></div>
+<div style="padding:50px;">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="row">
+            You are Logged in as <span style="font-size:large;color:forestgreen;">@User.Identity.Name</span>
+        </div>
+        <div style="padding-top:30px;"></div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <div><b>Your Claim Values:</b></div>
+                <div style="padding-top:10px;">
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="width:30%;">User ID</td>
+                                <td style="width:50%;"><label>@Model.USERID</label></td>
+                            </tr>
+                            <tr>
+                                <td>Email ID</td>
+                                <td><label>@Model.EMAILID</label></td>
+                            </tr>
+                            <tr>
+                                <td>Phone</td>
+                                <td><label>@Model.PHONE</label></td>
+                            </tr>
+                            <tr>
+                                <td>Access Level</td>
+                                <td><label style="color:forestgreen">@Model.ACCESS_LEVEL</label></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9">
+                <div><b>Links to check your permissions</b></div>
+                <div style="padding-top:20px;"></div>
+                <ul>
+                    <li>@Html.ActionLink("Go to Director Page", "DirectorPage", "Dashboard")</li>
+                    <li style="padding-top:5px;">@Html.ActionLink("Go to Supervisor Page", "SupervisorPage", "Dashboard")</li>
+                    <li style="padding-top:5px;">@Html.ActionLink("Go to Analyst Page", "AnalystPage", "Dashboard")</li>
+                    <li style="padding-top:5px;">@Html.ActionLink("See how user permissions controlled inside action method In-line code - Only for Supervisor & Analyst", "SupervisorAnalystPage", "Dashboard")</li>
+                    <li style="padding-top:5px;">@Html.ActionLink("See how view page level permission works (Login in as Analyst JBlack@email.com who do not have WRITE permission)", "PageLevelPermission", "Dashboard")</li>
+                    <li style="padding-top:5px;">@Html.ActionLink("See how Authentication & Authorization handled for Ajax Calls", "CheckAjaxCalls", "Dashboard")</li>
+                </ul>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div>
+                    @using (Html.BeginForm("LoginUser", "Home", FormMethod.Post, new { role = "form" }))
+                    {
+                        <div>
+                            @Html.AntiForgeryToken()
+                            <div>
+                                <label>User ID</label><br />
+                            </div>
+                            <div>
+                                @Html.TextBoxFor(m => m.USERID, new { @class = "form-control txtbox" })
+                            </div>
+                            <div style="padding-top:20px;"></div>
+                            <div>
+                                <label>Password</label><br />
+                            </div>
+                            <div>
+                                @Html.PasswordFor(m => m.PASSWORD, new { @class = "form-control txtbox" })
+                            </div>
+                        </div>
+                        <div style="padding-left:35%;width:40%;">
+                            <div style="padding-top:20px;">
+                                <input class="btn btn-primary btn-lg rph-login-button" type="submit" value="Login" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8">
+                <div style="padding-left:50px;">
+                    <div><b>Please login with any of the below User ID, Password is <span style="color:forestgreen;font-size:large;">test</span> for all Users</b></div>
+                    <div style="padding-top:10px;">
+                        <ul style="list-style: none;">
+                            <li>jsmith@email.com  -  Director</li>
+                            <li>srob@email.com  -  Supervisor</li>
+                            <li>dwill@email.com  -  Analyst</li>
+                            <li>JBlack@email.com  -  Analyst with 'No Write' access</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

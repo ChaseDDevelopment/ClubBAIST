@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "SupervisorPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="padding-top:50px;"></div>
+<h2>Supervisor Page</h2>
+
+<div class="row">
+    <div style="padding-top:50px;">
+        <div style="font-size:large;">Welcome Supervisor <span style="color:forestgreen;">@User.Identity.Name</span></div>
+    </div>
+    <div style="padding-top:10px;">
+        <div style="color:grey;">@ViewBag.Message</div>
+    </div>
+</div>
+
