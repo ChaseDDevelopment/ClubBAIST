@@ -26,6 +26,14 @@ namespace ClubBaist.Controllers
             return Confirmation;
         }
 
+        //public bool ModifyTeeTime(TeeTime selectedTeeTime)
+        //{
+        //    bool Confirmation = false;
+        //    TeeTimes dataManager = new TeeTimes();
+        //    Confirmation = dataManager.ModifyTeeTime(selectedTeeTime);
+        //    return Confirmation;
+        //}
+
         public bool CreateStandingTeeTimeRequest(StandingTeeTime request)
         {
             bool Confirmation = false;

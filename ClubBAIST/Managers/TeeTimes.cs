@@ -16,7 +16,7 @@ namespace ClubBaist.Managers
 
 
             SqlConnection clubbaistConnection = new SqlConnection();
-            clubbaistConnection.ConnectionString = @"Server=(localdb)\MSSQLLocalDB;" + "Integrated Security = true; Database = CLUBBAIST";
+            clubbaistConnection.ConnectionString = Startup.ConnectionString;
 
             SqlCommand findDailyTeeSheetCommand = new SqlCommand();
             findDailyTeeSheetCommand.CommandType = CommandType.StoredProcedure;

@@ -13,7 +13,7 @@ namespace ClubBaist.Managers
         public Golfer GetGolfer(int MemberNumber)
         {
             SqlConnection clubbaistConnection = new SqlConnection();
-            clubbaistConnection.ConnectionString = @"Server=(localdb)\MSSQLLocalDB;" + "Integrated Security = true; Database = CLUBBAIST";
+            clubbaistConnection.ConnectionString = Startup.ConnectionString;
 
             SqlCommand getGolfer = new SqlCommand();
             getGolfer.CommandType = CommandType.StoredProcedure;

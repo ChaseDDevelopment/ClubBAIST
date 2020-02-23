@@ -24,11 +24,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/CreateTeeTime">Create Tee Time</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                TeeTime Management
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="" asp-page="/CreateTeeTime">Create Tee Time</a>
+                                <a class="dropdown-item" asp-area="" asp-page="/ModifyTeeTime">Modify Tee Time</a>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/CreateStandingTeeTimeRequest">Create Standing Tee Time Request</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                TeeTime Management
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="" asp-page="/CreateStandingTeeTime">Create Standing Tee Time Request</a>
+                                <a class="dropdown-item" asp-area="" asp-page="/CancelStandingTeeTime">Cancel Standing Tee Time Request</a>
+                            </div>
                         </li>
                     </ul>
                 </div>

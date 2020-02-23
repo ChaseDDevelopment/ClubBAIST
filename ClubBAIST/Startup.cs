@@ -30,9 +30,10 @@ namespace ClubBaist
 {
     public class Startup
     {
+        public static string ConnectionString { get; private set; }
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = new ConfigurationBuilder().SetBasePath(System.IO.Directory.GetCurrentDirectory()).AddJsonFile("appSettings.json").Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -76,10 +77,14 @@ namespace ClubBaist
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                ConnectionString = Configuration["ConnectionStrings:DevConnection"];
+                
             }
             else
             {
                 app.UseExceptionHandler("/Error");
+                ConnectionString = Configuration["ConnectionStrings:ProdConnection"];
+
             }
 
             app.UseStaticFiles();
