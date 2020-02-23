@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using ClubBaist.Controllers;
 using ClubBaist.Models;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,8 +17,9 @@ namespace ClubBaist
         {
 
             //var user = golfers.SingleOrDefault(x => x.MemberNumber == MemberNumber);
-
-            BCS
+             
+            CBS RequestDirector = new CBS();
+            var user = RequestDirector.getGolfer(MemberNumber);
 
 
             if (user == null)

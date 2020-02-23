@@ -132,6 +132,41 @@ AS
         RETURN @ReturnCode
 GO
 
+
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_NAME = N'GetGolfer'
+)
+DROP PROCEDURE GetGolfer
+GO
+-- Create the stored procedure
+CREATE PROCEDURE GetGolfer
+(
+    @MemberNumber INT = NULL
+)
+AS
+    DECLARE @ReturnCode INT
+    SET @ReturnCode = 1
+    
+    IF @MemberNumber IS NULL
+        RAISERROR('GetGolfer Failed - Required Parameter: @MemberNumber',16,1)
+    ELSE
+        BEGIN
+
+        SELECT * FROM Golfer
+        WHERE MemberNumber = @MemberNumber
+
+        IF @@ERROR = 0
+            SET @ReturnCode = 0
+        ELSE RAISERROR('FindDailyTeeSheet Failed - Select Error in Database',16,1)
+        END
+        RETURN @ReturnCode
+GO
+
+
+
+
 IF EXISTS(
 SELECT *
     FROM INFORMATION_SCHEMA.ROUTINES

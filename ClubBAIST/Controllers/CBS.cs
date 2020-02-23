@@ -34,5 +34,13 @@ namespace ClubBaist.Controllers
             return Confirmation;
 
         }
+
+        public Golfer getGolfer(int MemberNumber)
+        {
+            Golfer golfer = new Golfer();
+            Golfers dataManager = new Golfers();
+            golfer = dataManager.GetGolfer(MemberNumber);
+            return golfer;
+        }
     }
 }
