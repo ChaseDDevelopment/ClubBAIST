@@ -18,8 +18,8 @@ namespace ClubBaist.CustomAtrritutes
         {
             public void OnAuthorization(AuthorizationFilterContext context)
             {
-                bool IsAutenticated = context.HttpContext.User.Identity.IsAuthenticated;
-                if (!IsAutenticated)
+                bool IsAuthenticated = context.HttpContext.User.Identity.IsAuthenticated;
+                if (!IsAuthenticated)
                 {
                     context.Result = new RedirectResult("/Login");
                 }
