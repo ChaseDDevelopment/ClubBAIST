@@ -19,7 +19,7 @@ namespace ClubBaist
             //var user = golfers.SingleOrDefault(x => x.MemberNumber == MemberNumber);
              
             CBS RequestDirector = new CBS();
-            var user = RequestDirector.getGolfer(MemberNumber);
+            var user = RequestDirector.GetGolfer(MemberNumber);
 
 
             if (user == null)
@@ -56,7 +56,10 @@ namespace ClubBaist
             {
                 new Claim(ClaimTypes.Name, golfer.FirstName + " " + golfer.LastName), 
                 new Claim(ClaimTypes.Email, golfer.Email),
-                new Claim("MembershipLevel", golfer.MembershipLevel.ToString())
+                new Claim("MembershipLevel", golfer.MembershipLevel.ToString()),
+                new Claim("MemberNumber", golfer.MemberNumber.ToString()),
+                new Claim("Shareholder", golfer.Shareholder.ToString()),
+                new Claim("Approved",golfer.Approved.ToString()), 
             };
             return claims;
         }

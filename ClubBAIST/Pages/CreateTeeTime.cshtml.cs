@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using ClubBaist.Controllers;
+﻿using ClubBaist.Controllers;
 using ClubBaist.CustomAtrritutes;
 using ClubBaist.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ClubBaist.Pages
 {
@@ -36,8 +36,15 @@ namespace ClubBaist.Pages
         [DisplayName("Desired Time")]
         public string selectedTime { get; set; }
 
+        [BindProperty]
+        public int memberLevel { get; set; }
+
+        [BindProperty]
+        public string memberName { get; set; }
+
         public void OnGet()
         {
+            //memberName = User.Claims.FirstOrDefault(c => c.Type == Nam).Value;
         }
 
         public IActionResult OnPostFind()
@@ -46,6 +53,10 @@ namespace ClubBaist.Pages
             if (ModelState.IsValid)
             {
                 CBS RequestDirector = new CBS();
+
+                var MembershipLevel = User.Claims.FirstOrDefault(c => c.Type == "MembershipLevel").Value;
+                Int32.TryParse(MembershipLevel, out int memlevel);
+                memberLevel = memlevel;
 
                 DateTime.TryParse(date, out DateTime selectedDate);
 
@@ -69,6 +80,8 @@ namespace ClubBaist.Pages
                 dailyTeeSheet = RequestDirector.ViewDailyTeeSheet(selectedDate);
 
 
+
+
                 if (dailyTeeSheet.TeeTimes.Count == 0)
                 {
                     dailyTeeSheet = null;
@@ -77,11 +90,66 @@ namespace ClubBaist.Pages
                 }
                 else
                 {
-                    foreach (var t in dailyTeeSheet.TeeTimes)
+                    List<TeeTime> teeTimesToInclude = new List<TeeTime>();
+                    foreach (TeeTime t in dailyTeeSheet.TeeTimes)
                     {
                         DateTime time = new DateTime((t.Time.Ticks));
+                        TeeTime teeTime = new TeeTime();
                         if (t.Golfer1 == null)
-                            availableTeeTimes.Add(time.ToString("t"));
+                        {
+                            if (memlevel == 3)
+                            {
+                                if (selectedDate.DayOfWeek == DayOfWeek.Saturday ||
+                                    selectedDate.DayOfWeek == DayOfWeek.Sunday)
+                                {
+                                    if (time.TimeOfDay >= TimeSpan.FromHours(11))
+                                    {
+                                        teeTimesToInclude.Add(t);
+                                    }
+                                }
+                                else
+                                { 
+                                    if (time.TimeOfDay <= TimeSpan.FromHours(15) || time.TimeOfDay >= TimeSpan.FromHours(17.5))
+                                    {
+                                        teeTimesToInclude.Add(t);
+                                    }
+                                }
+
+
+                            }
+                            else if(memlevel == 4)
+                            {
+                                if (selectedDate.DayOfWeek == DayOfWeek.Saturday ||
+                                    selectedDate.DayOfWeek == DayOfWeek.Sunday)
+                                {
+                                    if (time.TimeOfDay >= TimeSpan.FromHours(13))
+                                    {
+                                        teeTimesToInclude.Add(t);
+                                    }
+                                }
+                                else
+                                {
+                                    if (time.TimeOfDay <= TimeSpan.FromHours(15) || time.TimeOfDay >= TimeSpan.FromHours(18))
+                                    {
+                                        teeTimesToInclude.Add(t);
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                teeTimesToInclude.Add(t);
+                            }
+
+                        }
+                            
+                    }
+
+                    dailyTeeSheet.TeeTimes = teeTimesToInclude;
+                    foreach (var t in dailyTeeSheet.TeeTimes)
+                    {
+                        DateTime time = new DateTime(t.Time.Ticks);
+                        availableTeeTimes.Add(time.ToString("t"));
                     }
 
                     selectedDateTemp = selectedDate;
@@ -107,9 +175,26 @@ namespace ClubBaist.Pages
 
             TimeSpan time = Convert.ToDateTime(selectedTime).TimeOfDay;
 
+            if (User.Identity.Name == "Club Admin" || User.Identity.Name == "Club ProShop")
+            {
+                newTeeTime.CreatedBy = x
+            }
+            else
+            {
+                Int32.TryParse(User.Claims.SingleOrDefault(c => c.Type == "MemberNumber").Value, out int createdBy);
+                newTeeTime.CreatedBy = createdBy;
+            }
+            if (User.Identity.Name == "Club Admin" || User.Identity.Name == "Club ProShop")
+            {
+                newTeeTime.CreatedBy = x
+            }
+            else
+            {
+                newTeeTime.Golfer1 = User.Identity.Name;
+            }
+
             newTeeTime.Date = selectedDateTemp;
             newTeeTime.Time = time;
-            newTeeTime.Golfer1 = Golfer1;
             newTeeTime.Golfer2 = Golfer2;
             newTeeTime.Golfer3 = Golfer3;
             newTeeTime.Golfer4 = Golfer4;

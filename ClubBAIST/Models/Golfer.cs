@@ -9,7 +9,6 @@ namespace ClubBaist.Models
     {
         public int MemberNumber { get; set; }
         public int MembershipLevel { get; set; }
-        public string Name { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
@@ -26,6 +25,8 @@ namespace ClubBaist.Models
         public string CompanyPostalCode { get; set; }
         public string CompanyPhone { get; set; }
         public DateTime MembershipStartDate { get; set; }
+        public bool Shareholder { get; set; }
+        public string Approved { get; set; }
     }
 
 

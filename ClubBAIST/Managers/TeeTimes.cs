@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClubBaist.Models;
 using Microsoft.Data.SqlClient;
+using System.Security.Claims;
 
 namespace ClubBaist.Managers
 {
@@ -65,6 +66,8 @@ namespace ClubBaist.Managers
                         time += TimeSpan.FromMinutes(8);
                 }
 
+   
+
 
                 while (reader.Read())
                     for (var i = 0; i < teeTimes.Count; i++)
@@ -105,12 +108,166 @@ namespace ClubBaist.Managers
         {
             bool Success = false;
             SqlConnection clubbaistConnection = new SqlConnection();
-            clubbaistConnection.ConnectionString = @"Server=(localdb)\MSSQLLocalDB;" + "Integrated Security = true; Database = CLUBBAIST";
+            clubbaistConnection.ConnectionString = Startup.ConnectionString;
 
             SqlCommand CreateTeeTimeCommand = new SqlCommand();
             CreateTeeTimeCommand.CommandType = CommandType.StoredProcedure;
             CreateTeeTimeCommand.Connection = clubbaistConnection;
             CreateTeeTimeCommand.CommandText = "CreateTeeTime";
+
+            SqlParameter dateParameter = new SqlParameter();
+            dateParameter.ParameterName = "@Date";
+            dateParameter.SqlDbType = SqlDbType.Date;
+            dateParameter.Value = selectedTeeTime.Date;
+            dateParameter.Direction = ParameterDirection.Input;
+
+            SqlParameter timeParameter = new SqlParameter();
+            timeParameter.ParameterName = "@Time";
+            timeParameter.SqlDbType = SqlDbType.Time;
+            timeParameter.Value = selectedTeeTime.Time;
+            timeParameter.Direction = ParameterDirection.Input;
+
+            SqlParameter CreatedByParameter = new SqlParameter();
+            CreatedByParameter.ParameterName = "@CreatedBy";
+            CreatedByParameter.SqlDbType = SqlDbType.Int;
+            CreatedByParameter.Value = selectedTeeTime.CreatedBy;
+            CreatedByParameter.Direction = ParameterDirection.Input;
+
+            SqlParameter golfer1Parameter = new SqlParameter();
+            golfer1Parameter.ParameterName = "@Golfer1";
+            golfer1Parameter.SqlDbType = SqlDbType.NVarChar;
+            golfer1Parameter.Value = selectedTeeTime.Golfer1;
+            golfer1Parameter.Direction = ParameterDirection.Input;
+
+            SqlParameter golfer2Parameter = new SqlParameter();
+            golfer2Parameter.ParameterName = "@Golfer2";
+            golfer2Parameter.SqlDbType = SqlDbType.NVarChar;
+            golfer2Parameter.Value = selectedTeeTime.Golfer2;
+            golfer2Parameter.Direction = ParameterDirection.Input;
+
+            SqlParameter golfer3Parameter = new SqlParameter();
+            golfer3Parameter.ParameterName = "@Golfer3";
+            golfer3Parameter.SqlDbType = SqlDbType.NVarChar;
+            golfer3Parameter.Value = selectedTeeTime.Golfer3;
+            golfer3Parameter.Direction = ParameterDirection.Input;
+
+            SqlParameter golfer4Parameter = new SqlParameter();
+            golfer4Parameter.ParameterName = "@Golfer4";
+            golfer4Parameter.SqlDbType = SqlDbType.NVarChar;
+            golfer4Parameter.Value = selectedTeeTime.Golfer4;
+            golfer4Parameter.Direction = ParameterDirection.Input;
+
+            SqlParameter ReturnCodeParameter = new SqlParameter();
+            ReturnCodeParameter.ParameterName = "@ReturnCode";
+            ReturnCodeParameter.SqlDbType = SqlDbType.Int;
+            ReturnCodeParameter.Direction = ParameterDirection.ReturnValue;
+
+            CreateTeeTimeCommand.Parameters.Add(dateParameter);
+            CreateTeeTimeCommand.Parameters.Add(timeParameter);
+            CreateTeeTimeCommand.Parameters.Add(CreatedByParameter);
+            CreateTeeTimeCommand.Parameters.Add(golfer1Parameter);
+            CreateTeeTimeCommand.Parameters.Add(golfer2Parameter);
+            CreateTeeTimeCommand.Parameters.Add(golfer3Parameter);
+            CreateTeeTimeCommand.Parameters.Add(golfer4Parameter);
+            CreateTeeTimeCommand.Parameters.Add(ReturnCodeParameter);
+
+            try
+            {
+                clubbaistConnection.Open();
+                CreateTeeTimeCommand.ExecuteNonQuery();
+
+                int returnValue = (int) ReturnCodeParameter.Value;
+                if (returnValue == 0)
+                {
+                    Success = true;
+                }
+
+                clubbaistConnection.Close();
+
+            }
+            catch
+            {
+                Success = false;
+            }
+
+
+
+
+
+            return Success;
+        }
+
+        public TeeTime FindTeeTime(DateTime Date,TimeSpan time)
+        {
+            TeeTime teeTime = new TeeTime();
+            SqlConnection clubbaistConnection = new SqlConnection();
+            clubbaistConnection.ConnectionString = Startup.ConnectionString;
+
+            SqlCommand findTeeTimeCommand = new SqlCommand();
+            findTeeTimeCommand.CommandType = CommandType.StoredProcedure;
+            findTeeTimeCommand.Connection = clubbaistConnection;
+            findTeeTimeCommand.CommandText = "FindTeeTime";
+
+            SqlParameter Golfer1Paramater = new SqlParameter();
+            Golfer1Paramater.ParameterName = "@Time";
+            Golfer1Paramater.SqlDbType = SqlDbType.Time;
+            Golfer1Paramater.Value = time;
+            Golfer1Paramater.Direction = ParameterDirection.Input;
+
+            SqlParameter TeeTimeDateParameter = new SqlParameter();
+            TeeTimeDateParameter.ParameterName = "@Date";
+            TeeTimeDateParameter.SqlDbType = SqlDbType.Date;
+            TeeTimeDateParameter.Value = Date;
+            TeeTimeDateParameter.Direction = ParameterDirection.Input;
+
+            SqlParameter ReturnCodeParameter = new SqlParameter();
+            ReturnCodeParameter.ParameterName = "@ReturnCode";
+            ReturnCodeParameter.SqlDbType = SqlDbType.Int;
+            ReturnCodeParameter.Direction = ParameterDirection.ReturnValue;
+
+            findTeeTimeCommand.Parameters.Add(Golfer1Paramater);
+            findTeeTimeCommand.Parameters.Add(TeeTimeDateParameter);
+            findTeeTimeCommand.Parameters.Add(ReturnCodeParameter);
+
+            try
+            {
+                clubbaistConnection.Open();
+                SqlDataReader reader;
+                reader = findTeeTimeCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    teeTime.Date = (DateTime) reader["Date"];
+                    teeTime.Time = (TimeSpan) reader["Time"];
+                    teeTime.CreatedBy = (int) reader["CreatedBy"];
+                    teeTime.Golfer1 = reader["Golfer1"].ToString();
+                    teeTime.Golfer2 = reader["Golfer2"].ToString();
+                    teeTime.Golfer3 = reader["Golfer3"].ToString();
+                    teeTime.Golfer4 = reader["Golfer4"].ToString();
+                    teeTime.Checkin = (bool) reader["Checkin"];
+                }
+
+                clubbaistConnection.Close();
+            }
+            catch
+            {
+
+            }
+
+            return teeTime;
+
+        }
+
+        public bool ModifyTeeTime(TeeTime selectedTeeTime)
+        {
+            bool Success = false;
+            SqlConnection clubbaistConnection = new SqlConnection();
+            clubbaistConnection.ConnectionString = Startup.ConnectionString;
+
+            SqlCommand ModifyTeeTimeCommand = new SqlCommand();
+            ModifyTeeTimeCommand.CommandType = CommandType.StoredProcedure;
+            ModifyTeeTimeCommand.Connection = clubbaistConnection;
+            ModifyTeeTimeCommand.CommandText = "ModifyTeeTime";
 
             SqlParameter dateParameter = new SqlParameter();
             dateParameter.ParameterName = "@Date";
@@ -153,36 +310,13 @@ namespace ClubBaist.Managers
             ReturnCodeParameter.SqlDbType = SqlDbType.Int;
             ReturnCodeParameter.Direction = ParameterDirection.ReturnValue;
 
-            CreateTeeTimeCommand.Parameters.Add(dateParameter);
-            CreateTeeTimeCommand.Parameters.Add(timeParameter);
-            CreateTeeTimeCommand.Parameters.Add(golfer1Parameter);
-            CreateTeeTimeCommand.Parameters.Add(golfer2Parameter);
-            CreateTeeTimeCommand.Parameters.Add(golfer3Parameter);
-            CreateTeeTimeCommand.Parameters.Add(golfer4Parameter);
-            CreateTeeTimeCommand.Parameters.Add(ReturnCodeParameter);
-
-            try
-            {
-                clubbaistConnection.Open();
-                CreateTeeTimeCommand.ExecuteNonQuery();
-
-                int returnValue = (int) ReturnCodeParameter.Value;
-                if (returnValue == 0)
-                {
-                    Success = true;
-                }
-
-                clubbaistConnection.Close();
-
-            }
-            catch
-            {
-                Success = false;
-            }
-
-
-
-
+            ModifyTeeTimeCommand.Parameters.Add(dateParameter);
+            ModifyTeeTimeCommand.Parameters.Add(timeParameter);
+            ModifyTeeTimeCommand.Parameters.Add(golfer1Parameter);
+            ModifyTeeTimeCommand.Parameters.Add(golfer2Parameter);
+            ModifyTeeTimeCommand.Parameters.Add(golfer3Parameter);
+            ModifyTeeTimeCommand.Parameters.Add(golfer4Parameter);
+            ModifyTeeTimeCommand.Parameters.Add(ReturnCodeParameter);
 
             return Success;
         }

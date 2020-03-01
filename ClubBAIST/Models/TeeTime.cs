@@ -10,6 +10,7 @@ namespace ClubBaist.Models
     {
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
+        public int CreatedBy { get; set; }
         public string Golfer1 { get; set; }
 
         public string Golfer2 { get; set; }
@@ -17,5 +18,6 @@ namespace ClubBaist.Models
         public string Golfer3 { get; set; }
 
         public string Golfer4 { get; set; }
+        public bool Checkin { get; set; }
     }
 }

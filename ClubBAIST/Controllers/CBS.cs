@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using ClubBaist.Managers;
@@ -14,7 +15,6 @@ namespace ClubBaist.Controllers
             DailyTeeSheet dailyTeeSheet = new DailyTeeSheet();
             TeeTimes dataManager = new TeeTimes();
             dailyTeeSheet = dataManager.FindDailyTeeSheet(date);
-
             return dailyTeeSheet;
         }
 
@@ -26,13 +26,78 @@ namespace ClubBaist.Controllers
             return Confirmation;
         }
 
-        //public bool ModifyTeeTime(TeeTime selectedTeeTime)
-        //{
-        //    bool Confirmation = false;
-        //    TeeTimes dataManager = new TeeTimes();
-        //    Confirmation = dataManager.ModifyTeeTime(selectedTeeTime);
-        //    return Confirmation;
-        //}
+        #region NOT DONE
+        //NOT DONE
+
+        public bool ModifyTeeTime(TeeTime selectedTeeTime)
+        {
+            bool Confirmation = false;
+            TeeTimes dataManager = new TeeTimes();
+            Confirmation = dataManager.ModifyTeeTime(selectedTeeTime);
+            return Confirmation;
+        }
+
+        public TeeTime FindTeeTime(DateTime Date, TimeSpan time)
+        {
+            TeeTimes dataManager = new TeeTimes();
+            var teeTime = dataManager.FindTeeTime(Date, time);
+            return teeTime;
+        }
+
+        //NOT DONE
+        public StandingTeeTime FindStandingTeeTimeRequest(int MemberNumber)
+        {
+            StandingTeeTimes dataManager = new StandingTeeTimes();
+            var request = dataManager.FindStandingTeeTimeRequest(MemberNumber);
+            return request;
+        }
+
+        public bool CancelStandingTeeTimeRequest(int StandingTeeTimeID)
+        {
+            bool Confirmation = false;
+            StandingTeeTimes dataManager = new StandingTeeTimes();
+            Confirmation = dataManager.CancelStandingTeeTimeRequest(StandingTeeTimeID);
+            return Confirmation;
+        }
+
+        public Golfer ViewMemberAccount(int MemberNumber)
+        {
+            Golfers dataManager = new Golfers();
+            var Account = dataManager.ViewMemberAccount(MemberNumber);
+            return Account;
+        }
+        public bool RecordMembershipApplication(Golfer golfer)
+        {
+            bool Confirmation = false;
+            Golfers dataManager = new Golfers();
+            Confirmation = dataManager.RecordMembershipApplication(golfer);
+            return Confirmation;
+        }
+
+        public bool UpdateMemberAccount(Golfer golfer)
+        {
+            bool Confirmation = false;
+            Golfers dataManager = new Golfers();
+            Confirmation = dataManager.UpdateMemberAccount(golfer);
+            return Confirmation;
+        }
+
+        #endregion
+
+        public Golfer GetGolfer(int MemberNumber)
+        {
+            Golfers dataManager = new Golfers();
+            var Account = dataManager.GetGolfer(MemberNumber);
+            return Account;
+        }
+
+        public List<Golfers> GetGolfers()
+        {
+            Golfers dataManager = new Golfers();
+            var Golfers = dataManager.GetGolfers();
+            return Golfers;
+        }
+
 
         public bool CreateStandingTeeTimeRequest(StandingTeeTime request)
         {
@@ -41,14 +106,6 @@ namespace ClubBaist.Controllers
             Confirmation = dataManager.CreateStandingTeeTimeRequest(request);
             return Confirmation;
 
-        }
-
-        public Golfer getGolfer(int MemberNumber)
-        {
-            Golfer golfer = new Golfer();
-            Golfers dataManager = new Golfers();
-            golfer = dataManager.GetGolfer(MemberNumber);
-            return golfer;
         }
     }
 }

@@ -122,5 +122,114 @@ namespace ClubBaist.Managers
 
             return Success;
         }
+
+        public StandingTeeTime FindStandingTeeTimeRequest(int MemberNumber)
+        {
+            SqlConnection clubbaistConnection = new SqlConnection();
+            clubbaistConnection.ConnectionString = Startup.ConnectionString;
+
+            SqlCommand FindStandingTeeTimeRequestCommand = new SqlCommand();
+            FindStandingTeeTimeRequestCommand.CommandType = CommandType.StoredProcedure;
+            FindStandingTeeTimeRequestCommand.Connection = clubbaistConnection;
+            FindStandingTeeTimeRequestCommand.CommandText = "FindStandingTeeTimeRequest";
+
+            SqlParameter memberNumberParameter = new SqlParameter();
+            memberNumberParameter.ParameterName = "@MemberNumber";
+            memberNumberParameter.SqlDbType = SqlDbType.Int;
+            memberNumberParameter.Value = MemberNumber;
+
+            SqlParameter ReturnCodeParameter = new SqlParameter();
+            ReturnCodeParameter.ParameterName = "@ReturnCode";
+            ReturnCodeParameter.SqlDbType = SqlDbType.Int;
+            ReturnCodeParameter.Direction = ParameterDirection.ReturnValue;
+
+            FindStandingTeeTimeRequestCommand.Parameters.Add(memberNumberParameter);
+            FindStandingTeeTimeRequestCommand.Parameters.Add(ReturnCodeParameter);
+
+            StandingTeeTime Request = new StandingTeeTime();
+
+            try
+            {
+                clubbaistConnection.Open();
+
+                SqlDataReader reader;
+
+                reader = FindStandingTeeTimeRequestCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Request.StandingTeeTimeID = (int) reader["StandingTeeTimeID"];
+                    Request.DayOfWeek = (DateTime) reader["DayOfWeek"];
+                    Request.EndDate = (DateTime) reader["EndDate"];
+                    Request.MemberName1 = reader["MemberName1"].ToString();
+                    Request.MemberName2 = reader["MemberName2"].ToString();
+                    Request.MemberName3 = reader["MemberName3"].ToString();
+                    Request.MemberName4 = reader["MemberName4"].ToString();
+                    Request.MemberNumber1 = (int) reader["MemberNumber1"];
+                    Request.MemberNumber2 = (int) reader["MemberNumber2"];
+                    Request.MemberNumber3 = (int) reader["MemberNumber3"];
+                    Request.MemberNumber4 = (int) reader["MemberNumber4"];
+                    Request.StartDate = (DateTime) reader["StartDate"];
+                    Request.EndDate = (DateTime) reader["EndDate"];
+
+                }
+
+                clubbaistConnection.Close();
+            }
+            catch
+            {
+
+            }
+
+            return Request;
+        }
+
+        public bool CancelStandingTeeTimeRequest(int StandingTeeTimeID)
+        {
+            bool Success = false;
+            SqlConnection clubbaistConnection = new SqlConnection();
+            clubbaistConnection.ConnectionString = Startup.ConnectionString;
+
+            SqlCommand CancelStandingTeeTimeRequestCommand = new SqlCommand();
+            CancelStandingTeeTimeRequestCommand.CommandType = CommandType.StoredProcedure;
+            CancelStandingTeeTimeRequestCommand.Connection = clubbaistConnection;
+            CancelStandingTeeTimeRequestCommand.CommandText = "CancelStandingTeeTime";
+
+            SqlParameter StandingTeeTimeIDParameter = new SqlParameter();
+            StandingTeeTimeIDParameter.ParameterName = "@StandingTeeTimeID";
+            StandingTeeTimeIDParameter.SqlDbType = SqlDbType.Int;
+            StandingTeeTimeIDParameter.Value = StandingTeeTimeIDParameter;
+            StandingTeeTimeIDParameter.Direction = ParameterDirection.Input;
+
+
+            SqlParameter ReturnCodeParameter = new SqlParameter();
+            ReturnCodeParameter.ParameterName = "@ReturnCode";
+            ReturnCodeParameter.SqlDbType = SqlDbType.Int;
+            ReturnCodeParameter.Direction = ParameterDirection.ReturnValue;
+
+            CancelStandingTeeTimeRequestCommand.Parameters.Add(StandingTeeTimeIDParameter);
+            CancelStandingTeeTimeRequestCommand.Parameters.Add(ReturnCodeParameter);
+
+            try
+            {
+                clubbaistConnection.Open();
+                CancelStandingTeeTimeRequestCommand.ExecuteNonQuery();
+
+                int returnValue = (int) ReturnCodeParameter.Value;
+                if (returnValue == 0)
+                {
+                    Success = true;
+                }
+
+                clubbaistConnection.Close();
+
+            }
+            catch
+            {
+
+            }
+
+            return Success;
+        }
     }
 }

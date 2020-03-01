@@ -14,16 +14,34 @@
         });
     </script>
 }
-
-
-@*Page Level Authorization by Custom Claim*@
-@*@if (User.HasClaim("MembershipLevel".ToString(), "2"))
-{ 
-    <p>THis is hidden if you are not a level 2 </p>
-}*@
-
 <h2 style="text-align: center;">Create Tee Time</h2>
-@if (TempData["Danger"] is true)
+
+@if (User.HasClaim("MembershipLevel".ToString(), "5"))
+{
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-offset-3 col-md-6">
+            <div class="alert alert-danger" role="alert">
+                <p style="text-align: center">You are not allowed to make a tee time as a Copper Member</p>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+}
+else if (User.HasClaim("Approved".ToString(), "N"))  
+{
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-offset-3 col-md-6">
+            <div class="alert alert-danger" role="alert">
+                <p style="text-align:center">You are not an Approved Member of ClubBaist</p>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+}
+else
+{@if (TempData["Danger"] is true)
 {
     <div class="row">
         <div class="col-md-3"></div>
@@ -56,129 +74,136 @@
     <div class="col-md-3"></div>
 </div>
 
-@{
 
-    if (Model.dailyTeeSheet != null)
-    {
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
+
+@if (Model.dailyTeeSheet != null)
+{
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Day Of Week:</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Model.dailyTeeSheet.Date.ToString("yyyy MMMM dd")
+                        </td>
+                        <td>
+                            @Model.dailyTeeSheet.Date.DayOfWeek
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="my-custom-scrollbar table-wrapper-scroll-y">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Date</th>
-                            <th scope="col">Day Of Week:</th>
-
+                            <th>Time</th>
+                            <th>Golfers</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                @Model.dailyTeeSheet.Date.ToString("yyyy MMMM dd")
-                            </td>
-                            <td>
-                                @Model.dailyTeeSheet.Date.DayOfWeek
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="my-custom-scrollbar table-wrapper-scroll-y">
-                    <table class="table">
-                        <thead>
+                        @foreach (var item in Model.dailyTeeSheet.TeeTimes)
+                        {
                             <tr>
-                                <th>Time</th>
-                                <th>Golfers</th>
-                                <th>Date</th>
+                                <td>
+                                    @Html.DisplayFor(ModelItem => item.Time)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Golfer1)
+                                    @Html.DisplayFor(modelItem => item.Golfer2)
+                                    @Html.DisplayFor(modelItem => item.Golfer3)
+                                    @Html.DisplayFor(modelItem => item.Golfer4)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.dailyTeeSheet.TeeTimes)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(ModelItem => item.Time)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Golfer1)
+                        }
 
-                                        @Html.DisplayFor(modelItem => item.Golfer2)
-                                        @Html.DisplayFor(modelItem => item.Golfer3)
-                                        @Html.DisplayFor(modelItem => item.Golfer4)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Date)
+                    </tbody>
 
-                                    </td>
-                                </tr>
-                            }
-
-                        </tbody>
-
-                    </table>
-                </div>
+                </table>
             </div>
-            <div class="col-md-2"></div>
         </div>
-        <br />
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <form asp-page-handler="createTeeTime" method="post">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label asp-for="Golfer1">Golfer1</label>
-                            <input asp-for="Golfer1" class="form-control form-control-sm" />
-                            <span asp-validation-for="Golfer1"></span>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label asp-for="Golfer2">Golfer2</label>
-                            <input asp-for="Golfer2" class="form-control form-control-sm" />
-                            <span asp-validation-for="Golfer2"></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label asp-for="Golfer3">Golfer3</label>
-                            <input asp-for="Golfer3" class="form-control form-control-sm" />
-                            <span asp-validation-for="Golfer3"></span>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label asp-for="Golfer4">Golfer4</label>
-                            <input asp-for="Golfer4" class="form-control form-control-sm" />
-                            <span asp-validation-for="Golfer4"></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label asp-for="selectedTime"></label>
-                            <select class="form-control" asp-for="selectedTime">
-                                @foreach (var item in Model.availableTeeTimes)
-                                {
-                                    
+        <div class="col-md-2"></div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form asp-page-handler="createTeeTime" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Golfer1">Golfer1</label>
+                        @if (User.Identity.Name == "Club Clerk" || User.Identity.Name == "Club ProShop")
+                        {
+                            <input asp-for="Golfer1" class="form-control form-control-sm"/>
+                        }
+                        else
+                        {
+                            <input asp-for="Golfer1" class="form-control form-control-sm disabled" disabled="true" value="@User.Identity.Name" />
+                        }
 
-                                    <option value="@item">@item.ToString()</option>
+                        <span asp-validation-for="Golfer1"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Golfer2">Golfer2</label>
+                        <input asp-for="Golfer2" class="form-control form-control-sm" />
+                        <span asp-validation-for="Golfer2"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Golfer3">Golfer3</label>
+                        <input asp-for="Golfer3" class="form-control form-control-sm" />
+                        <span asp-validation-for="Golfer3"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Golfer4">Golfer4</label>
+                        <input asp-for="Golfer4" class="form-control form-control-sm" />
+                        <span asp-validation-for="Golfer4"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="selectedTime"></label>
+                        <select class="form-control" asp-for="selectedTime">
+                            @foreach (var item in Model.availableTeeTimes)
+                            {
 
-                                }
-                            </select>
-                            <span asp-validation-for="selectedTime"></span>
-                        </div>
-                        @*<div class="form-group col-md-3">
+
+                                <option value="@item">@item.ToString()</option>
+
+                            }
+                        </select>
+                        <span asp-validation-for="selectedTime"></span>
+                    </div>
+                    @*<div class="form-group col-md-3">
                             <label asp-for="MemberNumber">Member Number:</label>
                             <input asp-for="MemberNumber" class="form-control form-control-sm" />
                             <span asp-validation-for="MemberNumber"></span>
                         </div>*@
+                </div>
+                <div class="form-row">
+                    <div class="form-group text-right col-md-12">
+                        <button type="button" id="reset" class="reset btn btn-secondary">Reset</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group text-right col-md-12">
-                            <button type="button" id="reset" class="reset btn btn-secondary">Reset</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
+                </div>
 
-                </form>
-            </div>
-            <div class="col-md-2"></div>
+            </form>
         </div>
+        <div class="col-md-2"></div>
+    </div>
 
-    }
+}
 }

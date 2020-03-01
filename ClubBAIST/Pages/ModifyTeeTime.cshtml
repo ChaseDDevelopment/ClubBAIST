@@ -1,0 +1,95 @@
+﻿@page
+@model ClubBaist.ModifyTeeTimeModel
+@{
+    ViewData["Title"] = "ModifyTeeTime";
+}
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $("#reset").click(function () {
+            document.location.reload(true);
+        });
+    </script>
+}
+<h2 style="text-align: center;">Modify Tee Time</h2>
+
+@if (User.HasClaim("MembershipLevel".ToString(), "5"))
+{
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-offset-3 col-md-6">
+            <div class="alert alert-danger" role="alert">
+                <p style="text-align: center">You are not allowed to modify a tee time as a Copper Member</p>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+}
+else if (User.HasClaim("Approved".ToString(), "N"))
+{
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-offset-3 col-md-6">
+            <div class="alert alert-danger" role="alert">
+                <p style="text-align:center">You are not an Approved Member of ClubBaist</p>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+}
+else
+{
+    @if (TempData["Danger"] is true)
+    {
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-offset-3 col-md-6">
+                <div class="alert alert-danger" role="alert">
+                    @Model.Alert
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <form asp-page-handler="find" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="date">Date:</label>
+                        <input asp-for="date" class="form-control form-control-sm" placeholder="YYYY-MM-DD" />
+                        <span asp-validation-for="date"></span>
+                        <small id="dateHelp" class="form-text text-muted"></small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="selectedTime"></label>
+                        <select class="form-control" asp-for="selectedTime">
+
+                            @foreach (var item in Model.availableTimesString)
+                            {
+                                <option value="@item">@item.ToString()</option>
+                            }
+
+
+                        </select>
+                        <span asp-validation-for="selectedTime"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group text-right col-md-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    @if (Model.selectedTeeTime != null)
+    {
+
+    }
+}
+
