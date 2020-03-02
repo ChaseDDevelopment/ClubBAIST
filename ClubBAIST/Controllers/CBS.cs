@@ -93,7 +93,7 @@ namespace ClubBaist.Controllers
         {
             bool Confirmation = false;
             Golfers dataManager = new Golfers();
-            Confirmation = dataManager.UpdateMemberAccount(golfer);
+            Confirmation = dataManager.ModifyMembershipApplication(golfer);
             return Confirmation;
         }
 

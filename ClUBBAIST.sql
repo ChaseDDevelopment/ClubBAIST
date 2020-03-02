@@ -287,7 +287,7 @@ SELECT * FROM TeeTime
 WHERE [Date] = @Date AND [Time] = @Time
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
-ELSE RAISERROR('FindDailyTeeSheet Failed - Select Error in Database',16,1) 
+ELSE RAISERROR('FindTeeTime Failed - Select Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO
@@ -320,7 +320,37 @@ SELECT * FROM Golfer
 WHERE MemberNumber = @MemberNumber 
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
-ELSE RAISERROR('FindDailyTeeSheet Failed - Select Error in Database',16,1) 
+ELSE RAISERROR('GetGolfer Failed - Select Error in Database',16,1) 
+END 
+RETURN @ReturnCode 
+GO 
+
+IF EXISTS ( 
+SELECT * 
+FROM INFORMATION_SCHEMA.ROUTINES 
+WHERE SPECIFIC_NAME = N'ViewMemberAccount' 
+) 
+DROP PROCEDURE ViewMemberAccount 
+GO 
+-- Create the stored procedure 
+CREATE PROCEDURE ViewMemberAccount 
+( 
+@MemberNumber INT = NULL 
+) 
+AS 
+DECLARE @ReturnCode INT 
+SET @ReturnCode = 1 
+IF @MemberNumber IS NULL 
+RAISERROR('ViewMemberAccount Failed - Required Parameter: @MemberNumber',16,1) 
+ELSE 
+BEGIN 
+SELECT * FROM Golfer 
+WHERE MemberNumber = @MemberNumber
+SELECT * FROM MemberAccountEntries
+WHERE MemberNumber = @MemberNumber
+IF @@ERROR = 0 
+SET @ReturnCode = 0 
+ELSE RAISERROR('ViewMemberAccount Failed - Select Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO 
@@ -438,7 +468,7 @@ DELETE FROM TeeTime
 WHERE [Date] = @Date AND [Time] = @Time
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
-ELSE RAISERROR('ModifyTeeTime Failed - Update Error in Database',16,1) 
+ELSE RAISERROR('DeleteTeeTime Failed - Update Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO 
@@ -465,7 +495,7 @@ SELECT * FROM StandingTeeTime
 WHERE MemberNumber1 = @MemberNumber1
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
-ELSE RAISERROR('FindStandingTeeTime Failed - Insert Error in Database',16,1) 
+ELSE RAISERROR('FindStandingTeeTimeRequest Failed - Insert Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO 
@@ -486,14 +516,14 @@ AS
 DECLARE @ReturnCode INT 
 SET @ReturnCode = 1 
 IF @StandingTeeTimeID IS NULL 
-RAISERROR('CancelTeeTimeRequest Failed - Required Parameter: All',16,1) 
+RAISERROR('CancelStandingTeeTimeRequest Failed - Required Parameter: All',16,1) 
 ELSE  
 BEGIN 
 DELETE FROM StandingTeeTime
 WHERE StandingTeeTimeID = @StandingTeeTimeID
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
-ELSE RAISERROR('CancelStandingTeeTime Failed - Insert Error in Database',16,1) 
+ELSE RAISERROR('CancelStandingTeeTimeRequest Failed - Insert Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO 
@@ -578,16 +608,16 @@ AS
 DECLARE @ReturnCode INT 
 SET @ReturnCode = 1 
 IF @MemberNumber IS NULL AND @Approved IS NULL AND @MembershipStartDate IS NULL
-RAISERROR('RecordMembershipApplication Failed - Required Parameters: All',16,1) 
+RAISERROR('ReviewMembershipApplication Failed - Required Parameters: All',16,1) 
 ELSE 
 IF @MemberNumber IS NULL
-RAISERROR('RecordMembershipApplication Failed - Required Parameters: @MemberNumber',16,1)
+RAISERROR('ReviewMembershipApplication Failed - Required Parameters: @MemberNumber',16,1)
 ELSE
 IF @Approved IS NULL
-RAISERROR('RecordMembershipApplication Failed - Required Parameters: @FirstName',16,1)
+RAISERROR('ReviewMembershipApplication Failed - Required Parameters: @FirstName',16,1)
 ELSE
 IF @MembershipStartDate IS NULL
-RAISERROR('RecordMembershipApplication Failed - Required Parameters: @LastName',16,1)
+RAISERROR('ReviewMembershipApplication Failed - Required Parameters: @LastName',16,1)
 ELSE
 BEGIN 
 UPDATE Golfer
@@ -595,7 +625,7 @@ SET Approved = @Approved, MembershipStartDate = @MembershipStartDate
 WHERE MemberNumber = @MemberNumber
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
-ELSE RAISERROR('RecordMembershipApplication Failed - Insert Error in Database',16,1) 
+ELSE RAISERROR('ReviewMembershipApplication Failed - Insert Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO 
@@ -626,43 +656,43 @@ AS
 DECLARE @ReturnCode INT 
 SET @ReturnCode = 1 
 IF @MemberNumber1 IS NULL AND @MemberNumber2 IS NULL AND @MemberNumber3 IS NULL AND @MemberNumber4 IS NULL AND @MemberName1 IS NULL AND @MemberName2 IS NULL AND @MemberName3 IS NULL AND @MemberName4 IS NULL AND @DayOfWeek IS NULL AND @Time IS NULL AND @StartDate IS NULL AND @EndDate IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: All',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: All',16,1) 
 ELSE 
 IF @MemberNumber1 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber1',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberNumber1',16,1) 
 ELSE 
 IF @MemberNumber2 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber2',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberNumber2',16,1) 
 ELSE 
 IF @MemberNumber3 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber3',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberNumber3',16,1) 
 ELSE 
 IF @MemberNumber4 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberNumber4',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberNumber4',16,1) 
 ELSE 
 IF @MemberName1 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName1',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberName1',16,1) 
 ELSE 
 IF @MemberName2 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName2',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberName2',16,1) 
 ELSE 
 IF @MemberName3 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName3',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberName3',16,1) 
 ELSE 
 IF @MemberName4 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @MemberName4',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @MemberName4',16,1) 
 ELSE 
 IF @DayOfWeek IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @DayOfWeek',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @DayOfWeek',16,1) 
 ELSE 
 IF @Time IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @[Time]',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @[Time]',16,1) 
 ELSE 
 IF @StartDate IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @StartDate',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @StartDate',16,1) 
 ELSE 
 IF @EndDate IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: @EndDate',16,1) 
+RAISERROR('CreateStandingTeeTimeRequest Failed - Required Parameter: @EndDate',16,1) 
 ELSE 
 BEGIN 
 INSERT INTO StandingTeeTime 
@@ -733,6 +763,21 @@ VALUES
 
 
 GO 
+
+INSERT INTO MemberAccountEntries
+(
+    MemberNumber, PaymentDate, PaymentDescription, PaymentAmount
+)
+VALUES
+(
+    '3', '2020-04-20', 'Membership Dues', '3000.00'
+),
+(
+    '3', '2020-03-01', 'Misc. ', '1000.00'
+),
+(
+    '5', '2020-03-01', 'Misc. ', '10000.00'
+)
 
 -- Insert rows into table 'TeeTime' 
 --INSERT INTO TeeTime 

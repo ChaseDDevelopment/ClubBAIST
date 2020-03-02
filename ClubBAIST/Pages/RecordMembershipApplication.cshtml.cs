@@ -25,7 +25,7 @@ namespace ClubBaist
 
         public Golfer Golfer { get; set; }
 
-        [Required]
+        [Required, RegularExpression(@"[1-9]", ErrorMessage = "Must be greater than 0")]
         public int MembershipLevel { get; set; }
         [Required]
         public string FirstName { get; set; }
@@ -35,19 +35,28 @@ namespace ClubBaist
         public string Password { get; set; }
 
         public string Address { get; set; }
+        [RegularExpression(@"^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$", ErrorMessage = "Must be like A#A#A#")]
         public string PostalCode { get; set; }
+        [StringLength(10)]
         public string Phone { get; set; }
+        [StringLength(10)]
         public string AltPhone { get; set; }
         public string Email { get; set; }
+        [RegularExpression(@"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))", ErrorMessage =
+            "Must be in YYYY-MM-DD format.")]
+        [StringLength(10)]
+        [Required]
         public string DateOfBirth { get; set; }
         public string Occupation { get; set; }
         public string CompanyName { get; set; }
         public string CompanyAddress { get; set; }
+        [RegularExpression(@"^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$", ErrorMessage = "Must be like A#A#A#")]
         public string CompanyPostalCode { get; set; }
+        [StringLength(10)]
         public string CompanyPhone { get; set; }
-        [Required]
+        [Required, RegularExpression(@"[1-9]", ErrorMessage = "Must be greater than 0")]
         public int Sponser1 { get; set; }
-        [Required]
+        [Required, RegularExpression(@"[1-9]", ErrorMessage = "Must be greater than 0")]
         public int Sponser2 { get; set; }
         public string _Shareholder { get; set; }
 
@@ -67,6 +76,24 @@ namespace ClubBaist
             {
                 Golfer.Shareholder = false;
             }
+
+            if (_Shareholder == "1" && MembershipLevel != 1)
+            {
+                Alert = $"A member cannot be a shareholder unless they are a Gold member";
+                TempData["Danger"] = true;
+                return Page();
+            }
+
+            if (DateOfBirth != "")
+            {
+                DateTime.TryParse(DateOfBirth, out DateTime DOB);
+                Golfer.DateOfBirth = DOB;
+            }
+            
+
+            
+
+
             Confirmation = false;
             if (ModelState.IsValid)
             {
@@ -81,8 +108,7 @@ namespace ClubBaist
                 Golfer.Phone = Phone;
                 Golfer.AltPhone = AltPhone;
                 Golfer.Email = Email;
-                DateTime.TryParse(DateOfBirth, out DateTime DOB);
-                Golfer.DateOfBirth = DOB;
+
                 Golfer.Occupation = Occupation;
                 Golfer.CompanyName = CompanyName;
                 Golfer.CompanyAddress = CompanyAddress;

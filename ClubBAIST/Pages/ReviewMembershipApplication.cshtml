@@ -1,4 +1,5 @@
 ﻿@page
+@using ClubBaist.Models
 @model ClubBaist.ReviewMembershipApplicationModel
 @{
     ViewData["Title"] = "ReviewMembershipApplication";
@@ -13,4 +14,204 @@
     </script>
 }
 <h1>ReviewMembershipApplication</h1>
+@if (User.HasClaim("MembershipLevel".ToString(), "1"))
+{
+    @if (TempData["Danger"] is true)
+    {
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-offset-3 col-md-6">
+                <div class="alert alert-danger" style="text-align: center;" role="alert">
+                    @Model.Alert
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <form asp-page-handler="find" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label asp-for="MemberNumber">Member Number:</label>
+                        <input asp-for="MemberNumber" class="form-control form-control-sm"/>
+                        <span asp-validation-for="MemberNumber"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group text-right col-md-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    @if (Model.Golfer != null)
+    {
+
+        <hr/>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label><b>Member Number:</b> @Model.Golfer.MemberNumber</label>
+                    </div>
+                </div>
+                <form method="post" asp-page-handler="Review">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="MembershipLevel">Membership Level:</label>
+                            <input asp-for="MembershipLevel" class="form-control form-control-sm" placeholder="0" disabled value="@Model.Golfer.MembershipLevel"/>
+                            <span asp-validation-for="MembershipLevel"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="FirstName">First Name:</label>
+                            <input asp-for="FirstName" class="form-control form-control-sm" disabled value="@Model.Golfer.FirstName"/>
+                            <span asp-validation-for="FirstName"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="LastName">Last Name :</label>
+                            <input asp-for="LastName" class="form-control form-control-sm" disabled value="@Model.Golfer.LastName"/>
+                            <span asp-validation-for="LastName"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="Password">Password:</label>
+                            <input asp-for="Password" class="form-control form-control-sm" disabled value="@Model.Golfer.Password"/>
+                            <span asp-validation-for="Password"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="Address">Address:</label>
+                            <input asp-for="Address" class="form-control form-control-sm" disabled value="@Model.Golfer.Address"/>
+                            <span asp-validation-for="Address"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="PostalCode">PostalCode:</label>
+                            <input asp-for="PostalCode" class="form-control form-control-sm" disabled value="@Model.Golfer.PostalCode"/>
+                            <span asp-validation-for="PostalCode"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="Phone">Phone:</label>
+                            <input asp-for="Phone" class="form-control form-control-sm" disabled value="@Model.Golfer.Phone"/>
+                            <span asp-validation-for="Phone"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="AltPhone">Alt. Phone:</label>
+                            <input asp-for="AltPhone" class="form-control form-control-sm" disabled value="@Model.Golfer.AltPhone"/>
+                            <span asp-validation-for="AltPhone"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="Email">Email:</label>
+                            <input asp-for="Email" class="form-control form-control-sm" disabled value="@Model.Golfer.Email"/>
+                            <span asp-validation-for="Email"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="DateOfBirth">Date Of Birth:</label>
+                            <input asp-for="DateOfBirth" class="form-control form-control-sm" disabled value="@Model.Golfer.DateOfBirth"/>
+                            <span asp-validation-for="DateOfBirth"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="Occupation">Occupation:</label>
+                            <input asp-for="Occupation" class="form-control form-control-sm" disabled value="@Model.Golfer.Occupation"/>
+                            <span asp-validation-for="Occupation"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="CompanyName">Company Name:</label>
+                            <input asp-for="CompanyName" class="form-control form-control-sm" disabled value="@Model.Golfer.CompanyName"/>
+                            <span asp-validation-for="CompanyName"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="CompanyAddress">Company Address:</label>
+                            <input asp-for="CompanyAddress" class="form-control form-control-sm" disabled value="@Model.Golfer.CompanyAddress"/>
+                            <span asp-validation-for="CompanyAddress"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="CompanyPostalCode">Company Postal Code:</label>
+                            <input asp-for="CompanyPostalCode" class="form-control form-control-sm" disabled value="@Model.Golfer.CompanyPostalCode"/>
+                            <span asp-validation-for="CompanyPostalCode"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="CompanyPhone">Company Phone:</label>
+                            <input asp-for="CompanyPhone" class="form-control form-control-sm" disabled value="@Model.Golfer.CompanyPhone"/>
+                            <span asp-validation-for="CompanyPhone"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="Sponser1">Sponser 1:</label>
+                            <input asp-for="Sponser1" class="form-control form-control-sm" disabled value="@Model.Golfer.Sponser1"/>
+                            <span asp-validation-for="Sponser1"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="Sponser2">Sponser 2:</label>
+                            <input asp-for="Sponser2" class="form-control form-control-sm" disabled value="@Model.Golfer.Sponser2"/>
+                            <span asp-validation-for="Sponser2"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="_Shareholder">Shareholder:</label>
+                            <select class="form-control" asp-for="_Shareholder" disabled value="@Model.Golfer.Shareholder">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                            <span asp-validation-for="_Shareholder"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="Approved">Status:</label>
+                            @*<input asp-for="Approved" class="form-control form-control-sm"/>*@
+                            <select class="form-control" asp-for="Approved">
+                                <option value="N">Denied</option>
+                                <option value="H">On-Hold</option>
+                                <option value="W">Waitlisted</option>
+                                <option value="Y">Accepted</option>
+                            </select>
+                            <span asp-validation-for="Approved"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="MembershipStartDate">Membership Start Date:</label>
+                            <input asp-for="MembershipStartDate" class="form-control form-control-sm" value="@Model.Golfer.MembershipStartDate.ToString("yyyy-MM-dd")"/>
+                            <span asp-validation-for="MembershipStartDate"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group text-right col-md-12">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    }
+}
+else
+{
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-offset-3 col-md-6">
+            <div class="alert alert-danger" style="text-align: center;" role="alert">
+                <p style="text-align:center">Only the Club Baist Membership Committee Can access this page</p>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+}
 
