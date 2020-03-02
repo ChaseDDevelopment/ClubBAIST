@@ -195,12 +195,12 @@ namespace ClubBaist.Managers
             SqlCommand CancelStandingTeeTimeRequestCommand = new SqlCommand();
             CancelStandingTeeTimeRequestCommand.CommandType = CommandType.StoredProcedure;
             CancelStandingTeeTimeRequestCommand.Connection = clubbaistConnection;
-            CancelStandingTeeTimeRequestCommand.CommandText = "CancelStandingTeeTime";
+            CancelStandingTeeTimeRequestCommand.CommandText = "CancelStandingTeeTimeRequest";
 
             SqlParameter StandingTeeTimeIDParameter = new SqlParameter();
             StandingTeeTimeIDParameter.ParameterName = "@StandingTeeTimeID";
             StandingTeeTimeIDParameter.SqlDbType = SqlDbType.Int;
-            StandingTeeTimeIDParameter.Value = StandingTeeTimeIDParameter;
+            StandingTeeTimeIDParameter.Value = StandingTeeTimeID;
             StandingTeeTimeIDParameter.Direction = ParameterDirection.Input;
 
 

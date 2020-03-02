@@ -78,11 +78,17 @@ CompanyName NVARCHAR(50) NULL,
 CompanyAddress NVARCHAR(50) NULL, 
 CompanyPostalCode NVARCHAR(6) NULL, 
 CompanyPhone NVARCHAR(10) NULL, 
-MembershipStartDate DATE NULL, 
+MembershipStartDate DATE NULL,
+Sponser1 INT NOT NULL,
+Sponser2 INT NOT NULL,
 Shareholder BIT NULL, 
 Approved CHAR NULL,
 CONSTRAINT FK_Golfer_MembershipLevel FOREIGN KEY (MembershipLevel)
-REFERENCES MembershipLevel(MembershipLevel)
+REFERENCES MembershipLevel(MembershipLevel),
+CONSTRAINT FK_Sponser1_MemberNumber FOREIGN KEY (Sponser1)
+REFERENCES Golfer(MemberNumber),
+CONSTRAINT FK_Sponser2_MemberNumber FOREIGN KEY (Sponser2)
+REFERENCES Golfer(MemberNumber)
 ); 
 GO
 
@@ -452,17 +458,94 @@ AS
 DECLARE @ReturnCode INT 
 SET @ReturnCode = 1 
 IF @MemberNumber1 IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: All',16,1) 
+RAISERROR('FindStandingTeeTimeRequest Failed - Required Parameter: All',16,1) 
 ELSE  
 BEGIN 
 SELECT * FROM StandingTeeTime
 WHERE MemberNumber1 = @MemberNumber1
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
+ELSE RAISERROR('FindStandingTeeTime Failed - Insert Error in Database',16,1) 
+END 
+RETURN @ReturnCode 
+GO 
+
+
+IF EXISTS( 
+SELECT * 
+FROM INFORMATION_SCHEMA.ROUTINES 
+WHERE SPECIFIC_NAME = N'CancelStandingTeeTimeRequest' 
+) 
+DROP PROCEDURE CancelStandingTeeTimeRequest 
+GO 
+CREATE PROCEDURE CancelStandingTeeTimeRequest 
+( 
+@StandingTeeTimeID INT = NULL
+) 
+AS 
+DECLARE @ReturnCode INT 
+SET @ReturnCode = 1 
+IF @StandingTeeTimeID IS NULL 
+RAISERROR('CancelTeeTimeRequest Failed - Required Parameter: All',16,1) 
+ELSE  
+BEGIN 
+DELETE FROM StandingTeeTime
+WHERE StandingTeeTimeID = @StandingTeeTimeID
+IF @@ERROR = 0 
+SET @ReturnCode = 0 
+ELSE RAISERROR('CancelStandingTeeTime Failed - Insert Error in Database',16,1) 
+END 
+RETURN @ReturnCode 
+GO 
+
+
+IF EXISTS(
+    SELECT * FROM INFORMATION_SCHEMA.ROUTINES
+    WHERE SPECIFIC_NAME = N'RecordMembershipApplication'
+)
+DROP PROCEDURE RecordMembershipApplication
+GO
+CREATE PROCEDURE RecordMembershipApplication
+(
+    @MembershipLevel INT = NULL,
+    @FirstName NVARCHAR(25) = NULL,
+    @LastName NVARCHAR(25) = NULL, 
+[Password] NVARCHAR(25) = NULL, 
+[Address] NVARCHAR(50) = NULL, 
+PostalCode NVARCHAR(6) = NULL, 
+Phone NVARCHAR(10) = NULL, 
+AltPhone NVARCHAR(10) = NULL, 
+Email NVARCHAR(100) = NULL, 
+DateOfBirth DATE = NULL, 
+Occupation NVARCHAR(50) = NULL, 
+CompanyName NVARCHAR(50) = NULL, 
+CompanyAddress NVARCHAR(50) = NULL, 
+CompanyPostalCode NVARCHAR(6) = NULL, 
+CompanyPhone NVARCHAR(10) = NULL, 
+MembershipStartDate DATE = NULL,
+Sponser1 INT = NULL,
+Sponser2 INT = NULL,
+Shareholder BIT = NULL, 
+Approved CHAR  = NULL,
+)
+AS 
+DECLARE @ReturnCode INT 
+SET @ReturnCode = 1 
+IF @MemberNumber1 IS NULL AND @MemberNumber2 IS NULL AND @MemberNumber3 IS NULL AND @MemberNumber4 IS NULL AND @MemberName1 IS NULL AND @MemberName2 IS NULL AND @MemberName3 IS NULL AND @MemberName4 IS NULL AND @DayOfWeek IS NULL AND @Time IS NULL AND @StartDate IS NULL AND @EndDate IS NULL 
+RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: All',16,1) 
+ELSE 
+BEGIN 
+INSERT INTO StandingTeeTime 
+(MemberNumber1,MemberNumber2, MemberNumber3, MemberNumber4, MemberName1, MemberName2, MemberName3, MemberName4, DayOfWeek, [Time],StartDate,EndDate) 
+VALUES 
+(@MemberNumber1, @MemberNumber2, @MemberNumber3, @MemberNumber4, @MemberName1, @MemberName2, @MemberName3, @MemberName4, @DayOfWeek, @Time, @StartDate, @EndDate) 
+IF @@ERROR = 0 
+SET @ReturnCode = 0 
 ELSE RAISERROR('CreateTeeTime Failed - Insert Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO 
+
 
 
 IF EXISTS( 
@@ -567,26 +650,32 @@ GO
 -- Insert rows into table 'Golfer' 
 INSERT INTO Golfer 
 ( -- columns toMembershipNumberata into 
-MembershipLevel, FirstName, LastName, [Password], [Address], PostalCode, Phone, AltPhone, Email, DateOfBirth, Occupation, CompanyName, CompanyAddress, CompanyPostalCode, CompanyPhone, MembershipStartDate, Shareholder, Approved 
+MembershipLevel, FirstName, LastName, [Password], [Address], PostalCode, Phone, AltPhone, Email, DateOfBirth, Occupation, CompanyName, CompanyAddress, CompanyPostalCode, CompanyPhone, MembershipStartDate,Sponser1, Sponser2, Shareholder, Approved 
 ) 
 VALUES 
 ( 
-1, 'Club', 'Clerk', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','', 0, 'Y' 
+1, 'Club', 'Clerk', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','','1','2', 0, 'Y' 
 ),
 ( 
-1, 'Club', 'ProShop', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','', 0, 'Y' 
+1, 'Club', 'ProShop', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','','1','2', 0, 'Y' 
 ), 
 ( 
-2, 'Haley', 'Hennig', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '', 'HHennig@gmail.com', '1998-07-20', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15', 1, 'Y' 
+2, 'Haley', 'Hennig', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '', 'HHennig@gmail.com', '1998-07-20', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15','7','4',  1, 'Y' 
 ), 
 ( 
-3, 'Robert', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'WHoKnows', '', '', '', '2025-02-15', 0, 'Y' 
+3, 'Robert', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'WHoKnows', '', '', '', '2025-02-15','8','4', 0, 'Y' 
 ), 
 ( 
-2, 'Chase', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '7804493634', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15', 1, 'N' 
+2, 'Chase', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '7804493634', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15','7','4', 1, 'N' 
 ), 
 ( 
-5, 'Chase', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '7804493634', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15', 1, 'N' 
+5, 'Chase', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '7804493634', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15','7','4', 1, 'N' 
+), 
+( 
+2, 'Chase', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '7804493634', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15','7','4', 1, 'Y' 
+), 
+( 
+2, 'Chase', 'Dubauskas', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '7804493634', 'Chase.D.Dubauskas@gmail.com', '1997-02-15', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15','7','4', 1, 'Y' 
 ) 
 --add more rows here 
 
