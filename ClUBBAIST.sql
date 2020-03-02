@@ -508,45 +508,97 @@ GO
 CREATE PROCEDURE RecordMembershipApplication
 (
     @MembershipLevel INT = NULL,
-    @FirstName NVARCHAR(25) = NULL,
-    @LastName NVARCHAR(25) = NULL, 
-[Password] NVARCHAR(25) = NULL, 
-[Address] NVARCHAR(50) = NULL, 
-PostalCode NVARCHAR(6) = NULL, 
-Phone NVARCHAR(10) = NULL, 
-AltPhone NVARCHAR(10) = NULL, 
-Email NVARCHAR(100) = NULL, 
-DateOfBirth DATE = NULL, 
-Occupation NVARCHAR(50) = NULL, 
-CompanyName NVARCHAR(50) = NULL, 
-CompanyAddress NVARCHAR(50) = NULL, 
-CompanyPostalCode NVARCHAR(6) = NULL, 
-CompanyPhone NVARCHAR(10) = NULL, 
-MembershipStartDate DATE = NULL,
-Sponser1 INT = NULL,
-Sponser2 INT = NULL,
-Shareholder BIT = NULL, 
-Approved CHAR  = NULL,
+    @FirstName [NVARCHAR](25) = NULL,
+    @LastName [NVARCHAR](25) = NULL, 
+    @Password [NVARCHAR](25) = NULL, 
+    @Address [NVARCHAR](50) = NULL, 
+    @PostalCode [NVARCHAR](6) = NULL, 
+    @Phone [NVARCHAR](10) = NULL, 
+    @AltPhone [NVARCHAR](10) = NULL, 
+    @Email [NVARCHAR](100) = NULL, 
+    @DateOfBirth DATE = NULL, 
+    @Occupation [NVARCHAR](50) = NULL, 
+    @CompanyName [NVARCHAR](50) = NULL, 
+    @CompanyAddress [NVARCHAR](50) = NULL, 
+    @CompanyPostalCode [NVARCHAR](6) = NULL, 
+    @CompanyPhone [NVARCHAR](10) = NULL, 
+    @Sponser1 INT = NULL,
+    @Sponser2 INT = NULL,
+    @Shareholder BIT = NULL
 )
 AS 
 DECLARE @ReturnCode INT 
 SET @ReturnCode = 1 
-IF @MemberNumber1 IS NULL AND @MemberNumber2 IS NULL AND @MemberNumber3 IS NULL AND @MemberNumber4 IS NULL AND @MemberName1 IS NULL AND @MemberName2 IS NULL AND @MemberName3 IS NULL AND @MemberName4 IS NULL AND @DayOfWeek IS NULL AND @Time IS NULL AND @StartDate IS NULL AND @EndDate IS NULL 
-RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: All',16,1) 
+IF @MembershipLevel IS NULL AND @FirstName IS NULL AND @LastName IS NULL AND @Password IS NULL AND @Sponser1 IS NULL AND @Sponser2 IS NULL AND @Shareholder IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: All',16,1) 
 ELSE 
+IF @MembershipLevel IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @MemberNumber',16,1)
+ELSE
+IF @FirstName IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @FirstName',16,1)
+ELSE
+IF @LastName IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @LastName',16,1)
+ELSE
+IF @Password IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @Password',16,1)
+ELSE
+IF @Sponser1 IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @Sponser1',16,1)
+ELSE
+IF @Sponser2 IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @Sponser2',16,1)
+ELSE
 BEGIN 
-INSERT INTO StandingTeeTime 
-(MemberNumber1,MemberNumber2, MemberNumber3, MemberNumber4, MemberName1, MemberName2, MemberName3, MemberName4, DayOfWeek, [Time],StartDate,EndDate) 
+INSERT INTO Golfer
+(MembershipLevel,FirstName, LastName, [Password], [Address], PostalCode, Phone, AltPhone, Email, DateOfBirth,Occupation,CompanyName, CompanyAddress, CompanyPostalCode, CompanyPhone, Sponser1, Sponser2, Shareholder) 
 VALUES 
-(@MemberNumber1, @MemberNumber2, @MemberNumber3, @MemberNumber4, @MemberName1, @MemberName2, @MemberName3, @MemberName4, @DayOfWeek, @Time, @StartDate, @EndDate) 
+(@MembershipLevel,@FirstName, @LastName, @Password, @Address, @PostalCode, @Phone, @AltPhone, @Email, @DateOfBirth,@Occupation,@CompanyName, @CompanyAddress, @CompanyPostalCode, @CompanyPhone, @Sponser1, @Sponser2, @Shareholder) 
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
-ELSE RAISERROR('CreateTeeTime Failed - Insert Error in Database',16,1) 
+ELSE RAISERROR('RecordMembershipApplication Failed - Insert Error in Database',16,1) 
 END 
 RETURN @ReturnCode 
 GO 
 
-
+IF EXISTS(
+    SELECT * FROM INFORMATION_SCHEMA.ROUTINES
+    WHERE SPECIFIC_NAME = N'ReviewMembershipApplication'
+)
+DROP PROCEDURE ReviewMembershipApplication
+GO
+CREATE PROCEDURE ReviewMembershipApplication
+(
+    @MemberNumber INT = NULL,
+    @Approved CHAR = NULL,
+    @MembershipStartDate DATE = NULL
+)
+AS 
+DECLARE @ReturnCode INT 
+SET @ReturnCode = 1 
+IF @MemberNumber IS NULL AND @Approved IS NULL AND @MembershipStartDate IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: All',16,1) 
+ELSE 
+IF @MemberNumber IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @MemberNumber',16,1)
+ELSE
+IF @Approved IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @FirstName',16,1)
+ELSE
+IF @MembershipStartDate IS NULL
+RAISERROR('RecordMembershipApplication Failed - Required Parameters: @LastName',16,1)
+ELSE
+BEGIN 
+UPDATE Golfer
+SET Approved = @Approved, MembershipStartDate = @MembershipStartDate
+WHERE MemberNumber = @MemberNumber
+IF @@ERROR = 0 
+SET @ReturnCode = 0 
+ELSE RAISERROR('RecordMembershipApplication Failed - Insert Error in Database',16,1) 
+END 
+RETURN @ReturnCode 
+GO 
 
 IF EXISTS( 
 SELECT * 
