@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using ClubBaist.CustomAtrritutes;
 using ClubBaist.Models;
 using Microsoft.Data.SqlClient;
 
@@ -134,7 +135,7 @@ namespace ClubBaist.Managers
             FindStandingTeeTimeRequestCommand.CommandText = "FindStandingTeeTimeRequest";
 
             SqlParameter memberNumberParameter = new SqlParameter();
-            memberNumberParameter.ParameterName = "@MemberNumber";
+            memberNumberParameter.ParameterName = "@MemberNumber1";
             memberNumberParameter.SqlDbType = SqlDbType.Int;
             memberNumberParameter.Value = MemberNumber;
 
@@ -171,6 +172,7 @@ namespace ClubBaist.Managers
                     Request.MemberNumber4 = (int) reader["MemberNumber4"];
                     Request.StartDate = (DateTime) reader["StartDate"];
                     Request.EndDate = (DateTime) reader["EndDate"];
+                    Request.Time = (TimeSpan) reader["Time"];
 
                 }
 

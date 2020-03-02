@@ -1,4 +1,5 @@
 ﻿@page
+@using ClubBaist.Models
 @model ClubBaist.CancelStandingTeeTimeRequestModel
 @{
     ViewData["Title"] = "CancelStandingTeeTimeRequest";
@@ -39,97 +40,88 @@ else if (User.HasClaim("Shareholder", "True"))
             <div class="col-md-3"></div>
         </div>
     }
-    @if(Model.)
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            <form method="post">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label asp-for="StartDate">Desired Start Date:</label>
-                        <input asp-for="StartDate" class="form-control form-control-sm" placeholder="YYYY-MM-DD" />
-                        <span asp-validation-for="StartDate"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label asp-for="EndDate">Desired End Date:</label>
-                        <input asp-for="EndDate" class="form-control form-control-sm" placeholder="YYYY-MM-DD" />
-                        <span asp-validation-for="EndDate"></span>
-                    </div>
-                </div>
-                <hr />
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberNumber1">Member Number 1:</label>
-                        <input asp-for="MemberNumber1" class="form-control form-control-sm" disabled value="@User.Claims.SingleOrDefault(c => c.Type == "MemberNumber").Value" />
-                        <span asp-validation-for="MemberNumber1"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberName1">Member Name 1:</label>
-                        <input asp-for="MemberName1" class="form-control form-control-sm" disabled value="@User.Identity.Name" />
-                        <span asp-validation-for="MemberName1"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberNumber2">Member Number 2:</label>
-                        <input asp-for="MemberNumber2" class="form-control form-control-sm" />
-                        <span asp-validation-for="MemberNumber2"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberName2">Member Name 2:</label>
-                        <input asp-for="MemberName2" class="form-control form-control-sm" />
-                        <span asp-validation-for="MemberName2"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberNumber3">Member Number 3:</label>
-                        <input asp-for="MemberNumber3" class="form-control form-control-sm" />
-                        <span asp-validation-for="MemberNumber3"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberName3">Member Name 3:</label>
-                        <input asp-for="MemberName3" class="form-control form-control-sm" />
-                        <span asp-validation-for="MemberName3"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberNumber4">Member Number 4:</label>
-                        <input asp-for="MemberNumber4" class="form-control form-control-sm" />
-                        <span asp-validation-for="MemberNumber4"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label asp-for="MemberName4">Member Name 4:</label>
-                        <input asp-for="MemberName4" class="form-control form-control-sm" />
-                        <span asp-validation-for="MemberName4"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label asp-for="Time">Desired Time (+-30)</label>
-                        <select class="form-control" asp-for="Time">
-                            @if (Model.AvailableTimes != null)
-                            {
-                                @foreach (var item in Model.AvailableTimes)
-                                {
-                                    <option value="@item">@item.ToString()</option>
-                                }
-                            }
-
-                        </select>
-                    </div>
+    @if (Model.StandingTeeTimeRequest != null)
+    {
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form asp-page-handler="Cancel" method="post">
                     <div class="form-row">
-                        <div class="form-group text-right col-md-12">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.StartDate"><b>Desired Start Date:</b></label>
+                            <label>@Model.StartDate</label>
+                            <span asp-validation-for="StandingTeeTimeRequest.StartDate"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.EndDate"><b>Desired End Date:</b></label>
+                            <label>@Model.EndDate</label>
+                            <span asp-validation-for="StandingTeeTimeRequest.EndDate"></span>
                         </div>
                     </div>
-                </div>
-            </form>
+                    <hr/>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberNumber1">Member Number 1:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberNumber1" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberNumber1"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberNumber1"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberName1">Member Name 1:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberName1" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberName1"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberName1"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberNumber2">Member Number 2:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberNumber2" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberNumber2"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberNumber2"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberName2">Member Name 2:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberName2" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberName2"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberName2"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberNumber3">Member Number 3:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberNumber3" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberNumber3"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberNumber3"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberName3">Member Name 3:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberName3" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberName3"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberName3"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberNumber4">Member Number 4:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberNumber4" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberNumber4"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberNumber4"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="StandingTeeTimeRequest.MemberName4">Member Name 4:</label>
+                            <input asp-for="StandingTeeTimeRequest.MemberName4" class="form-control form-control-sm" disabled value="@Model.StandingTeeTimeRequest.MemberName4"/>
+                            <span asp-validation-for="StandingTeeTimeRequest.MemberName4"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label><b>Time:</b>@Model.time</label>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group text-right col-md-12">
+                                <button type="submit" class="btn btn-danger">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3"></div>
         </div>
-        <div class="col-md-3"></div>
-    </div>
-
+    }
 
 }
 else

@@ -455,7 +455,7 @@ IF @MemberNumber1 IS NULL
 RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: All',16,1) 
 ELSE  
 BEGIN 
-DELETE FROM StandingTeeTime
+SELECT * FROM StandingTeeTime
 WHERE MemberNumber1 = @MemberNumber1
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
