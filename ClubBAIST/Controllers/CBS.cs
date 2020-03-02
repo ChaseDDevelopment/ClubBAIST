@@ -57,15 +57,6 @@ namespace ClubBaist.Controllers
             return teeTime;
         }
 
-        #region NOT DONE
-        //NOT DONE
-
-
-
-
-
-        //NOT DONE
-
 
         public bool CancelStandingTeeTimeRequest(int StandingTeeTimeID)
         {
