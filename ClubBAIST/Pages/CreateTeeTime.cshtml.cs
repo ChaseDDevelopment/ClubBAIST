@@ -8,10 +8,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using ClubBaist.Managers;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
 
 namespace ClubBaist.Pages
 {
+
+
+
     //Require that the user be logged in at all times. 
     [UnAuthorized]
     public class CreateTeeTimeModel : PageModel
@@ -38,9 +44,11 @@ namespace ClubBaist.Pages
 
         [BindProperty]
         public int memberLevel { get; set; }
-
         [BindProperty]
-        public string memberName { get; set; }
+        public List<Golfer> golfers { get; set; }
+        [BindProperty]
+        public int selectedGolferNumber { get; set; }
+
 
         public void OnGet()
         {
@@ -59,6 +67,20 @@ namespace ClubBaist.Pages
                 memberLevel = memlevel;
 
                 DateTime.TryParse(date, out DateTime selectedDate);
+
+                if (User.Identity.Name == "Club Clerk" || User.Identity.Name == "Club ProShop")
+                {
+                    golfers = RequestDirector.GetGolfers();
+                }
+                TempData.Put("key", golfers);
+
+                if (selectedDate == DateTime.Today && User.Identity.Name != "Club ProShop")
+                {
+                    TempData["Danger"] = true;
+                    dailyTeeSheet = null;
+                    Alert = $"Can not create Tee Times the day of the Tee Time unless you are Pro Shop Staff";
+                    return Page();
+                }
 
                 if (selectedDate > DateTime.Today + TimeSpan.FromDays(7) || selectedDate < DateTime.Today)
                 {
@@ -154,6 +176,8 @@ namespace ClubBaist.Pages
 
                     selectedDateTemp = selectedDate;
 
+
+
                     return Page();
                 }
             }
@@ -169,24 +193,37 @@ namespace ClubBaist.Pages
             Confirmation = false;
             CBS RequestDirector = new CBS();
 
+            int SelectTest = selectedGolferNumber;
+
+            Golfer selectedGolfer = new Golfer();
+            var tempGolfers = TempData.Get<List<Golfer>>("key");
+            foreach (var g in tempGolfers)
+            {
+                if (g.MemberNumber == selectedGolferNumber)
+                {
+                    selectedGolfer = g;
+                }
+            }
+
+
             DailyTeeSheet verifyTeeSheet = new DailyTeeSheet();
 
             TeeTime newTeeTime = new TeeTime();
 
             TimeSpan time = Convert.ToDateTime(selectedTime).TimeOfDay;
 
-            if (User.Identity.Name == "Club Admin" || User.Identity.Name == "Club ProShop")
+            if (User.Identity.Name == "Club Clerk" || User.Identity.Name == "Club ProShop")
             {
-                newTeeTime.CreatedBy = x
+                newTeeTime.CreatedBy = selectedGolfer.MemberNumber;
             }
             else
             {
                 Int32.TryParse(User.Claims.SingleOrDefault(c => c.Type == "MemberNumber").Value, out int createdBy);
                 newTeeTime.CreatedBy = createdBy;
             }
-            if (User.Identity.Name == "Club Admin" || User.Identity.Name == "Club ProShop")
+            if (User.Identity.Name == "Club Clerk" || User.Identity.Name == "Club ProShop")
             {
-                newTeeTime.CreatedBy = x
+                newTeeTime.Golfer1 = selectedGolfer.FirstName + " " + selectedGolfer.LastName;
             }
             else
             {

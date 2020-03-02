@@ -26,7 +26,7 @@
         <div class="col-md-3"></div>
     </div>
 }
-else if (User.HasClaim("Approved".ToString(), "N"))
+else if (!User.HasClaim("Approved".ToString(), "Y"))
 {
     <div class="row">
         <div class="col-md-3"></div>
@@ -89,7 +89,59 @@ else
     </div>
     @if (Model.selectedTeeTime != null)
     {
-
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <form asp-page-handler="Checkin" method="post">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Golfer1">Golfer1</label>
+                    <input asp-for="Golfer1" class="form-control form-control-sm disabled" disabled value="@User.Identity.Name" />
+                    <span asp-validation-for="Golfer1"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Golfer2">Golfer2</label>
+                    <input asp-for="Golfer2" class="form-control form-control-sm disabled" disabled value="@Model.selectedTeeTime.Golfer2"/>
+                    <span asp-validation-for="Golfer2"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Golfer3">Golfer3</label>
+                    <input asp-for="Golfer3" class="form-control form-control-sm disabled" disabled value="@Model.selectedTeeTime.Golfer3" />
+                    <span asp-validation-for="Golfer3"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Golfer4">Golfer4</label>
+                    <input asp-for="Golfer4" class="form-control form-control-sm disabled" disabled value="@Model.selectedTeeTime.Golfer2"/>
+                    <span asp-validation-for="Golfer4"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    
+                    <label><b>Date:</b> @Model.selectedTeeTime.Date.ToString("yyyy-MM-dd")</label>
+                </div>
+                <div class="form-group col-md-6">
+                    <label><b>Time:</b> @Model.selectedTeeTime.Time</label>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group text-right col-md-12">
+                    <button type="submit" class="btn btn-primary">Check-in</button>
+                </div>
+            </div>
+        </form>
+        <form asp-page-handler="CancelTeeTime" method="post">
+        <div class="form-row">
+            <div class="form-group text-right col-md-12">
+                <button type="submit" class="btn btn-danger">Cancel Tee Time</button>
+            </div>
+        </div>
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+</div>
     }
 }
 

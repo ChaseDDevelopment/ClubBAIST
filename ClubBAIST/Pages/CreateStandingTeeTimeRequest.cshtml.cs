@@ -58,7 +58,6 @@ namespace ClubBaist.Pages
         [RegularExpression(@"([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))", ErrorMessage =
             "Must be in YYYY-MM-DD format.")]
         [StringLength(10)]
-        [Compare(nameof(StartDate))]
         [BindProperty] public string EndDate { get; set; }
 
 

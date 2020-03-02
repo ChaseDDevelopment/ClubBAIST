@@ -126,7 +126,7 @@ namespace ClubBaist.Managers
             SqlCommand GetGolfersCommand = new SqlCommand();
             GetGolfersCommand.CommandType = CommandType.StoredProcedure;
             GetGolfersCommand.Connection = clubbaistConnection;
-            GetGolfersCommand.CommandText = "RecordMembershipApplication";
+            GetGolfersCommand.CommandText = "GetGolfers";
 
             SqlParameter ReturnCodeParameter = new SqlParameter();
             ReturnCodeParameter.ParameterName = "@ReturnCode";
@@ -149,6 +149,7 @@ namespace ClubBaist.Managers
                     golfer.Approved = reader["Approved"].ToString();
                     golfer.Shareholder = (bool) reader["Shareholder"];
                     golfers.Add(golfer);
+
                 }
 
                 clubbaistConnection.Close();

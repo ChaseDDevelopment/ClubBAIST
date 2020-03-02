@@ -1,0 +1,16 @@
+﻿@page
+@model ClubBaist.ReviewMembershipApplicationModel
+@{
+    ViewData["Title"] = "ReviewMembershipApplication";
+}
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $("#reset").click(function () {
+            document.location.reload(true);
+        });
+    </script>
+}
+<h1>ReviewMembershipApplication</h1>
+

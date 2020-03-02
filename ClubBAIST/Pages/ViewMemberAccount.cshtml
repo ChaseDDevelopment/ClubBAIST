@@ -1,0 +1,16 @@
+﻿@page
+@model ClubBaist.ViewMemberAccountModel
+@{
+    ViewData["Title"] = "ViewMemberAccount";
+}
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $("#reset").click(function () {
+            document.location.reload(true);
+        });
+    </script>
+}
+<h1>ViewMemberAccount</h1>
+

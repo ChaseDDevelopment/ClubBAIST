@@ -86,6 +86,19 @@ REFERENCES MembershipLevel(MembershipLevel)
 ); 
 GO
 
+
+IF OBJECT_ID('MemberAccountEntries', 'U') IS NOT NULL 
+DROP TABLE MemberAccountEntries
+GO 
+CREATE TABLE MemberAccountEntries
+(
+    MemberNumber INT NOT NULL,
+    PaymentDate DATETIME NOT NULL,
+    PaymentDescription VARCHAR(150) NOT NULL,
+    PaymentAmount MONEY NOT NULL
+
+)
+
 -- Create a new table called 'TeeTime' in schema 'SchemaName' 
 -- Drop the table if it already exists 
 IF OBJECT_ID('TeeTime', 'U') IS NOT NULL 
@@ -232,6 +245,7 @@ DECLARE @ReturnCode INT
 SET @ReturnCode = 1 
 BEGIN 
 SELECT * FROM Golfer
+WHERE Golfer.MemberNumber > 2
 IF @@ERROR = 0 
 SET @ReturnCode = 0 
 ELSE RAISERROR('GetGolfers Failed - Select Error in Database',16,1) 
@@ -327,17 +341,17 @@ CREATE PROCEDURE CreateTeeTime
 AS 
 DECLARE @ReturnCode INT 
 SET @ReturnCode = 1 
-IF @Date IS NULL AND @Time IS NULL AND @Golfer1 IS NULL 
+IF @Date IS NULL AND @Time IS NULL AND @Golfer1 IS NULL AND @CreatedBy IS NULL
 RAISERROR('CreateTeeTime Failed - Required Parameters: All',16,1) 
 ELSE 
 IF @Date IS NULL 
-RAISERROR('CreateTeeTime Failed - Required Parameters: Date', 16,1) 
+RAISERROR('CreateTeeTime Failed - Required Parameters: @Date', 16,1) 
 ELSE 
 IF @Time IS NULL 
-RAISERROR('CreateTeeTime Failed - Required Parameters: Time',16,1) 
+RAISERROR('CreateTeeTime Failed - Required Parameters: @Time',16,1) 
 ELSE 
 IF @Golfer1 IS NULL 
-RAISERROR('CreateTeeTime Failed- Required Parameters: Time', 16,1) 
+RAISERROR('CreateTeeTime Failed- Required Parameters: @Golfer1', 16,1) 
 ELSE 
 BEGIN 
 INSERT INTO TeeTime([Date],[Time],CreatedBy,Golfer1,Golfer2,Golfer3,Golfer4) 
@@ -349,6 +363,106 @@ END
 RETURN @ReturnCode 
 GO 
 
+
+IF EXISTS( 
+SELECT * 
+FROM INFORMATION_SCHEMA.ROUTINES 
+WHERE SPECIFIC_NAME = N'ModifyTeeTime' 
+) 
+DROP PROCEDURE ModifyTeeTime 
+GO 
+CREATE PROCEDURE ModifyTeeTime 
+( 
+@Date DATETIME = NULL, 
+@Time TIME = NULL, 
+@Checkin BIT = NULL
+) 
+AS 
+DECLARE @ReturnCode INT 
+SET @ReturnCode = 1 
+IF @Date IS NULL AND @Time IS NULL AND @Checkin IS NULL 
+RAISERROR('ModifyTeeTime Failed - Required Parameters: All',16,1) 
+ELSE 
+IF @Date IS NULL 
+RAISERROR('ModifyTeeTime Failed - Required Parameters: @Date', 16,1) 
+ELSE 
+IF @Time IS NULL 
+RAISERROR('ModifyTeeTime Failed - Required Parameters: @Time',16,1) 
+ELSE 
+IF @Checkin IS NULL 
+RAISERROR('ModifyTeeTime Failed- Required Parameters: @Checkin', 16,1) 
+ELSE 
+BEGIN 
+UPDATE TeeTime
+SET Checkin = @Checkin
+WHERE [Date] = @Date AND [Time] = @Time
+IF @@ERROR = 0 
+SET @ReturnCode = 0 
+ELSE RAISERROR('ModifyTeeTime Failed - Update Error in Database',16,1) 
+END 
+RETURN @ReturnCode 
+GO 
+
+IF EXISTS( 
+SELECT * 
+FROM INFORMATION_SCHEMA.ROUTINES 
+WHERE SPECIFIC_NAME = N'DeleteTeeTime' 
+) 
+DROP PROCEDURE DeleteTeeTime 
+GO 
+CREATE PROCEDURE DeleteTeeTime 
+( 
+@Date DATETIME = NULL, 
+@Time TIME = NULL
+) 
+AS 
+DECLARE @ReturnCode INT 
+SET @ReturnCode = 1 
+IF @Date IS NULL AND @Time IS NULL
+RAISERROR('DeleteTeeTime Failed - Required Parameters: All',16,1) 
+ELSE 
+IF @Date IS NULL 
+RAISERROR('DeleteTeeTime Failed - Required Parameters: @Date', 16,1) 
+ELSE 
+IF @Time IS NULL 
+RAISERROR('DeleteTeeTime Failed - Required Parameters: @Time',16,1) 
+ELSE
+BEGIN 
+DELETE FROM TeeTime
+WHERE [Date] = @Date AND [Time] = @Time
+IF @@ERROR = 0 
+SET @ReturnCode = 0 
+ELSE RAISERROR('ModifyTeeTime Failed - Update Error in Database',16,1) 
+END 
+RETURN @ReturnCode 
+GO 
+
+IF EXISTS( 
+SELECT * 
+FROM INFORMATION_SCHEMA.ROUTINES 
+WHERE SPECIFIC_NAME = N'FindStandingTeeTimeRequest' 
+) 
+DROP PROCEDURE FindStandingTeeTimeRequest 
+GO 
+CREATE PROCEDURE FindStandingTeeTimeRequest 
+( 
+@MemberNumber1 INT = NULL
+) 
+AS 
+DECLARE @ReturnCode INT 
+SET @ReturnCode = 1 
+IF @MemberNumber1 IS NULL 
+RAISERROR('CreateTeeTimeRequest Failed - Required Parameter: All',16,1) 
+ELSE  
+BEGIN 
+DELETE FROM StandingTeeTime
+WHERE MemberNumber1 = @MemberNumber1
+IF @@ERROR = 0 
+SET @ReturnCode = 0 
+ELSE RAISERROR('CreateTeeTime Failed - Insert Error in Database',16,1) 
+END 
+RETURN @ReturnCode 
+GO 
 
 
 IF EXISTS( 
@@ -460,7 +574,7 @@ VALUES
 1, 'Club', 'Clerk', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','', 0, 'Y' 
 ),
 ( 
-1, 'Club', 'Clerk', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','', 0, 'Y' 
+1, 'Club', 'ProShop', 'Admin123', '29 Street', 'T8L4E4', '7805542223', '7809917077','ClubAdmin@gmail.com','','','','','','','', 0, 'Y' 
 ), 
 ( 
 2, 'Haley', 'Hennig', 'Password1', '28 Nottingham Bay', 'T8A5Z7', '7809745854', '', 'HHennig@gmail.com', '1998-07-20', 'Retail Sales Specialist', 'London Drugs', '', '', '', '2025-02-15', 1, 'Y' 
@@ -518,4 +632,4 @@ GO
 ---- add more rows here 
 --GO 
 Execute FindDailyTeeSheet '2020-08-15' 
-Execute CreateStandingTeeTimeRequest '1','2','3','4','Chase','Haley','ROB','Stark', '2020-08-26','00:07:00','2020-08-26','2020-08-26'
+Execute CreateStandingTeeTimeRequest '3','2','3','4','Haley Hennig','Haley','ROB','Stark', '2020-08-26','00:07:00','2020-08-26','2020-08-26'

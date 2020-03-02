@@ -26,8 +26,12 @@ namespace ClubBaist.Controllers
             return Confirmation;
         }
 
-        #region NOT DONE
-        //NOT DONE
+        public StandingTeeTime FindStandingTeeTimeRequest(int MemberNumber)
+        {
+            StandingTeeTimes dataManager = new StandingTeeTimes();
+            var request = dataManager.FindStandingTeeTimeRequest(MemberNumber);
+            return request;
+        }
 
         public bool ModifyTeeTime(TeeTime selectedTeeTime)
         {
@@ -37,6 +41,15 @@ namespace ClubBaist.Controllers
             return Confirmation;
         }
 
+        public bool DeleteTeeTime(TeeTime selectedTeeTime)
+        {
+            bool Confirmation = false;
+            TeeTimes dataManager = new TeeTimes();
+            Confirmation = dataManager.DeleteTeeTime(selectedTeeTime);
+            return Confirmation;
+        }
+
+
         public TeeTime FindTeeTime(DateTime Date, TimeSpan time)
         {
             TeeTimes dataManager = new TeeTimes();
@@ -44,13 +57,15 @@ namespace ClubBaist.Controllers
             return teeTime;
         }
 
+        #region NOT DONE
         //NOT DONE
-        public StandingTeeTime FindStandingTeeTimeRequest(int MemberNumber)
-        {
-            StandingTeeTimes dataManager = new StandingTeeTimes();
-            var request = dataManager.FindStandingTeeTimeRequest(MemberNumber);
-            return request;
-        }
+
+
+
+
+
+        //NOT DONE
+
 
         public bool CancelStandingTeeTimeRequest(int StandingTeeTimeID)
         {
@@ -91,7 +106,7 @@ namespace ClubBaist.Controllers
             return Account;
         }
 
-        public List<Golfers> GetGolfers()
+        public List<Golfer> GetGolfers()
         {
             Golfers dataManager = new Golfers();
             var Golfers = dataManager.GetGolfers();

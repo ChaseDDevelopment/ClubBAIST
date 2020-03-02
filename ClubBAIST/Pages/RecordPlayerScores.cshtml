@@ -1,0 +1,16 @@
+﻿@page
+@model ClubBaist.RecordPlayerScoresModel
+@{
+    ViewData["Title"] = "RecordPlayerScores";
+}
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $("#reset").click(function () {
+            document.location.reload(true);
+        });
+    </script>
+}
+<h1>RecordPlayerScores</h1>
+
