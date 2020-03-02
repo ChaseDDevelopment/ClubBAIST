@@ -89,13 +89,14 @@ namespace ClubBaist.Controllers
             return Confirmation;
         }
 
-        public bool UpdateMemberAccount(Golfer golfer)
+        public bool ReviewMembershipApplication(Golfer golfer)
         {
             bool Confirmation = false;
             Golfers dataManager = new Golfers();
-            Confirmation = dataManager.ModifyMembershipApplication(golfer);
+            Confirmation = dataManager.ReviewMembershipApplication(golfer);
             return Confirmation;
         }
+
 
         #endregion
 

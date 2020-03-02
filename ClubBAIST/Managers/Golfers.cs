@@ -340,118 +340,22 @@ namespace ClubBaist.Managers
             return Success;
         }
 
-        public bool ModifyMembershipApplication(Golfer golfer)
+        public bool ReviewMembershipApplication(Golfer golfer)
         {
             bool Success = false;
             SqlConnection clubbaistConnection = new SqlConnection();
             clubbaistConnection.ConnectionString = Startup.ConnectionString;
 
-            SqlCommand ModifyMembershipApplicationCommand = new SqlCommand();
-            ModifyMembershipApplicationCommand.CommandType = CommandType.StoredProcedure;
-            ModifyMembershipApplicationCommand.Connection = clubbaistConnection;
-            ModifyMembershipApplicationCommand.CommandText = "ModifyMembershipApplication";
+            SqlCommand ReviewMembershipApplicationCommand = new SqlCommand();
+            ReviewMembershipApplicationCommand.CommandType = CommandType.StoredProcedure;
+            ReviewMembershipApplicationCommand.Connection = clubbaistConnection;
+            ReviewMembershipApplicationCommand.CommandText = "ReviewMembershipApplication";
 
-            SqlParameter MembershipLevelParameter = new SqlParameter();
-            MembershipLevelParameter.ParameterName = "@MembershipLevel";
-            MembershipLevelParameter.SqlDbType = SqlDbType.Int;
-            MembershipLevelParameter.Value = golfer.MembershipLevel;
-            MembershipLevelParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter FirstNameParameter = new SqlParameter();
-            FirstNameParameter.ParameterName = "@FirstName";
-            FirstNameParameter.SqlDbType = SqlDbType.VarChar;
-            FirstNameParameter.Value = golfer.FirstName;
-            FirstNameParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter LastNameParameter = new SqlParameter();
-            LastNameParameter.ParameterName = "@LastName";
-            LastNameParameter.SqlDbType = SqlDbType.VarChar;
-            LastNameParameter.Value = golfer.LastName;
-            LastNameParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter PasswordParameter = new SqlParameter();
-            PasswordParameter.ParameterName = "@Password";
-            PasswordParameter.SqlDbType = SqlDbType.VarChar;
-            PasswordParameter.Value = golfer.Password;
-            PasswordParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter AddressParameter = new SqlParameter();
-            AddressParameter.ParameterName = "@Address";
-            AddressParameter.SqlDbType = SqlDbType.VarChar;
-            AddressParameter.Value = golfer.Address;
-            AddressParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter PostalCodeParameter = new SqlParameter();
-            PostalCodeParameter.ParameterName = "@PostalCode";
-            PostalCodeParameter.SqlDbType = SqlDbType.VarChar;
-            PostalCodeParameter.Value = golfer.PostalCode;
-            PostalCodeParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter PhoneParameter = new SqlParameter();
-            PhoneParameter.ParameterName = "@Phone";
-            PhoneParameter.SqlDbType = SqlDbType.VarChar;
-            PhoneParameter.Value = golfer.Phone;
-            PhoneParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter AltPhoneParameter = new SqlParameter();
-            AltPhoneParameter.ParameterName = "@AltPhone";
-            AltPhoneParameter.SqlDbType = SqlDbType.VarChar;
-            AltPhoneParameter.Value = golfer.AltPhone;
-            AltPhoneParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter EmailParameter = new SqlParameter();
-            EmailParameter.ParameterName = "@Email";
-            EmailParameter.SqlDbType = SqlDbType.VarChar;
-            EmailParameter.Value = golfer.Email;
-            EmailParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter DateOfBirthParameter = new SqlParameter();
-            DateOfBirthParameter.ParameterName = "@DateOfBirth";
-            DateOfBirthParameter.SqlDbType = SqlDbType.VarChar;
-            DateOfBirthParameter.Value = golfer.DateOfBirth;
-            DateOfBirthParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter OccupationParameter = new SqlParameter();
-            OccupationParameter.ParameterName = "@Occupation";
-            OccupationParameter.SqlDbType = SqlDbType.VarChar;
-            OccupationParameter.Value = golfer.Occupation;
-            OccupationParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter CompanyNameParameter = new SqlParameter();
-            CompanyNameParameter.ParameterName = "@CompanyName";
-            CompanyNameParameter.SqlDbType = SqlDbType.VarChar;
-            CompanyNameParameter.Value = golfer.CompanyName;
-            CompanyNameParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter CompanyAddressParameter = new SqlParameter();
-            CompanyAddressParameter.ParameterName = "@CompanyAddress";
-            CompanyAddressParameter.SqlDbType = SqlDbType.VarChar;
-            CompanyAddressParameter.Value = golfer.CompanyAddress;
-            CompanyAddressParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter CompanyPostalCodeParameter = new SqlParameter();
-            CompanyPostalCodeParameter.ParameterName = "@CompanyPostalCode";
-            CompanyPostalCodeParameter.SqlDbType = SqlDbType.VarChar;
-            CompanyPostalCodeParameter.Value = golfer.CompanyPostalCode;
-            CompanyPostalCodeParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter CompanyPhoneParameter = new SqlParameter();
-            CompanyPhoneParameter.ParameterName = "@CompanyPhone";
-            CompanyPhoneParameter.SqlDbType = SqlDbType.VarChar;
-            CompanyPhoneParameter.Value = golfer.CompanyPhone;
-            CompanyPhoneParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter MembershipStartDateParameter = new SqlParameter();
-            MembershipStartDateParameter.ParameterName = "@MembershipStartDate";
-            MembershipStartDateParameter.SqlDbType = SqlDbType.Date;
-            MembershipStartDateParameter.Value = golfer.MembershipStartDate;
-            MembershipStartDateParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter ShareholderParameter = new SqlParameter();
-            ShareholderParameter.ParameterName = "@Shareholder";
-            ShareholderParameter.SqlDbType = SqlDbType.Bit;
-            ShareholderParameter.Value = golfer.Shareholder;
-            ShareholderParameter.Direction = ParameterDirection.Input;
+            SqlParameter MemberNumberParameter = new SqlParameter();
+            MemberNumberParameter.ParameterName = "@MemberNumber";
+            MemberNumberParameter.SqlDbType = SqlDbType.Int;
+            MemberNumberParameter.Value = golfer.MemberNumber;
+            MemberNumberParameter.Direction = ParameterDirection.Input;
 
             SqlParameter ApprovedParameter = new SqlParameter();
             ApprovedParameter.ParameterName = "@Approved";
@@ -459,35 +363,26 @@ namespace ClubBaist.Managers
             ApprovedParameter.Value = golfer.Approved;
             ApprovedParameter.Direction = ParameterDirection.Input;
 
+            SqlParameter MembershipStartDateParameter = new SqlParameter();
+            MembershipStartDateParameter.ParameterName = "@MembershipStartDate";
+            MembershipStartDateParameter.SqlDbType = SqlDbType.Date;
+            MembershipStartDateParameter.Value = golfer.MembershipStartDate;
+            MembershipStartDateParameter.Direction = ParameterDirection.Input;
+
             SqlParameter ReturnCodeParameter = new SqlParameter();
             ReturnCodeParameter.ParameterName = "@ReturnCode";
             ReturnCodeParameter.SqlDbType = SqlDbType.Int;
             ReturnCodeParameter.Direction = ParameterDirection.ReturnValue;
 
-            ModifyMembershipApplicationCommand.Parameters.Add(MembershipLevelParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(FirstNameParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(LastNameParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(PasswordParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(AddressParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(PostalCodeParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(PhoneParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(AltPhoneParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(EmailParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(DateOfBirthParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(OccupationParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(CompanyNameParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(CompanyAddressParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(CompanyPostalCodeParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(CompanyPhoneParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(MembershipStartDateParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(ShareholderParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(ApprovedParameter);
-            ModifyMembershipApplicationCommand.Parameters.Add(ReturnCodeParameter);
+            ReviewMembershipApplicationCommand.Parameters.Add(MemberNumberParameter);
+            ReviewMembershipApplicationCommand.Parameters.Add(ApprovedParameter);
+            ReviewMembershipApplicationCommand.Parameters.Add(MembershipStartDateParameter);
+            ReviewMembershipApplicationCommand.Parameters.Add(ReturnCodeParameter);
 
             try
             {
                 clubbaistConnection.Open();
-                ModifyMembershipApplicationCommand.ExecuteNonQuery();
+                ReviewMembershipApplicationCommand.ExecuteNonQuery();
 
                 int returnValue = (int)ReturnCodeParameter.Value;
                 if (returnValue == 0)

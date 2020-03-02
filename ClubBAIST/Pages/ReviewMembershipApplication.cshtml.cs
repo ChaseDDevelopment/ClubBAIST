@@ -99,6 +99,7 @@ namespace ClubBaist
                 else
                 {
                     Golfer.MembershipStartDate = DateTime.Now;
+                    TempData["MemberNumber"] = MemberNumber;
                 }
 
             }
@@ -110,11 +111,26 @@ namespace ClubBaist
         public IActionResult OnPostReview()
         {
             Confirmation = false;
-            CBS RequestDirect = new CBS();
+            CBS RequestDirecter = new CBS();
 
             Golfer.Approved = Approved.ToString();
             DateTime.TryParse(MembershipStartDate, out DateTime date);
-            Golfer.MembershipStartDate = (DateTime)MembershipStartDate;
+            Golfer.MembershipStartDate = date;
+            Golfer.MemberNumber = (int)TempData["MemberNumber"];
+
+            Confirmation = RequestDirecter.ReviewMembershipApplication(Golfer);
+
+            if (Confirmation)
+            {
+                TempData["Alert"] = $"Successfully Updated Membership Application";
+                return RedirectToPage("/Index");
+            }
+            else
+            {
+                TempData["Danger"] = true;
+                Alert = $"Could Not Update Membership Application";
+                Golfer = null;
+            }
 
             return Page();
         }
