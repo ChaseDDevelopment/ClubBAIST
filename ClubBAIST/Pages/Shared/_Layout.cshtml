@@ -21,9 +21,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 TeeTime Management
@@ -41,6 +38,9 @@
                                 <a class="dropdown-item" asp-area="" asp-page="/CreateStandingTeeTimeRequest">Create Standing Tee Time Request</a>
                                 <a class="dropdown-item" asp-area="" asp-page="/CancelStandingTeeTimeRequest">Cancel Standing Tee Time Request</a>
                             </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ViewMemberAccount">View Account</a>
                         </li>
                         @if (User.HasClaim("MembershipLevel".ToString(), "1"))
                         {

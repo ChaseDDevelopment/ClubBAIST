@@ -29,6 +29,8 @@ namespace ClubBaist.Models
         public int Sponser2 { get; set; }
         public bool Shareholder { get; set; }
         public string Approved { get; set; }
+
+        public List<MemberAccountEntries> AccountEntries { get; set; }
     }
 
 

@@ -46,11 +46,37 @@ namespace ClubBaist.Managers
                 while (reader.Read())
                 {
                     golfer.MemberNumber = MemberNumber;
-                    golfer.MembershipLevel = (int) reader["MembershipLevel"];
-                    golfer.Password = (string) reader["Password"];
-                    golfer.FirstName = (string) reader["FirstName"];
-                    golfer.LastName = (string) reader["LastName"];
-                    golfer.Email = (string) reader["Email"];
+                    golfer.MembershipLevel = (int)reader["MembershipLevel"];
+                    golfer.Password = (string)reader["Password"];
+                    golfer.FirstName = (string)reader["FirstName"];
+                    golfer.LastName = (string)reader["LastName"];
+                    golfer.Email = (string)reader["Email"];
+                    golfer.Address = (string)reader["Address"];
+                    golfer.PostalCode = (string)reader["PostalCode"];
+                    golfer.Phone = (string)reader["Phone"];
+                    golfer.AltPhone = (string)reader["AltPhone"];
+                    golfer.DateOfBirth = (DateTime)reader["DateOfBirth"];
+                    golfer.Occupation = (string)reader["Occupation"];
+                    golfer.CompanyName = (string)reader["CompanyName"];
+                    golfer.CompanyAddress = (string)reader["CompanyAddress"];
+                    golfer.CompanyPostalCode = (string)reader["CompanyPostalCode"];
+                    golfer.CompanyPhone = (string)reader["CompanyName"];
+                    golfer.MembershipStartDate = (DateTime)reader["MembershipStartDate"];
+                    golfer.Sponser1 = (int)reader["Sponser1"];
+                    golfer.Sponser2 = (int)reader["Sponser2"];
+                    golfer.Shareholder = (bool)reader["Shareholder"];
+                    golfer.Approved = (string)reader["Approved"];
+                }
+
+                reader.NextResult();
+                while (reader.Read())
+                {
+                    MemberAccountEntries entry = new MemberAccountEntries();
+                    entry.PaymentAmount = (decimal)reader["PaymentAmount"];
+                    entry.PaymentDate = (DateTime) reader["PaymentDate"];
+                    entry.PaymentDescription = reader["PaymentDescription"].ToString();
+                    golfer.AccountEntries.Add(entry);
+
                 }
 
             }
