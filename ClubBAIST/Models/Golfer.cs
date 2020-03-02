@@ -18,13 +18,15 @@ namespace ClubBaist.Models
         public string Phone { get; set; }
         public string AltPhone { get; set; }
         public string Email { get; set; }
-        public string DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string Occupation { get; set; }
         public string CompanyName { get; set; }
         public string CompanyAddress { get; set; }
         public string CompanyPostalCode { get; set; }
         public string CompanyPhone { get; set; }
         public DateTime MembershipStartDate { get; set; }
+        public int Sponser1 { get; set; }
+        public int Sponser2 { get; set; }
         public bool Shareholder { get; set; }
         public string Approved { get; set; }
     }

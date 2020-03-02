@@ -35,13 +35,26 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Standing TeeTime Request Management
+                                Standing TeeTime
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" asp-area="" asp-page="/CreateStandingTeeTimeRequest">Create Standing Tee Time Request</a>
                                 <a class="dropdown-item" asp-area="" asp-page="/CancelStandingTeeTimeRequest">Cancel Standing Tee Time Request</a>
                             </div>
                         </li>
+                        @if (User.HasClaim("MembershipLevel".ToString(), "1"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Membership Management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-page="/RecordMembershipApplication">Record Membership Application</a>
+                                    <a class="dropdown-item" asp-area="" asp-page="/ReviewMembershipApplication">Review Membership Application</a>
+                                </div>
+                            </li>
+                        }
+
                     </ul>
                 </div>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">

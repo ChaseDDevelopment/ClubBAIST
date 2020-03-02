@@ -263,23 +263,23 @@ namespace ClubBaist.Managers
             CompanyPhoneParameter.Value = golfer.CompanyPhone;
             CompanyPhoneParameter.Direction = ParameterDirection.Input;
 
-            SqlParameter MembershipStartDateParameter = new SqlParameter();
-            MembershipStartDateParameter.ParameterName = "@MembershipStartDate";
-            MembershipStartDateParameter.SqlDbType = SqlDbType.Date;
-            MembershipStartDateParameter.Value = golfer.MembershipStartDate;
-            MembershipStartDateParameter.Direction = ParameterDirection.Input;
+            SqlParameter Sponser1Parameter = new SqlParameter();
+            Sponser1Parameter.ParameterName = "@Sponser1";
+            Sponser1Parameter.SqlDbType = SqlDbType.VarChar;
+            Sponser1Parameter.Value = golfer.Sponser1;
+            Sponser1Parameter.Direction = ParameterDirection.Input;
+
+            SqlParameter Sponser2Parameter = new SqlParameter();
+            Sponser2Parameter.ParameterName = "@Sponser2";
+            Sponser2Parameter.SqlDbType = SqlDbType.VarChar;
+            Sponser2Parameter.Value = golfer.Sponser2;
+            Sponser2Parameter.Direction = ParameterDirection.Input;
 
             SqlParameter ShareholderParameter = new SqlParameter();
             ShareholderParameter.ParameterName = "@Shareholder";
             ShareholderParameter.SqlDbType = SqlDbType.Bit;
             ShareholderParameter.Value = golfer.Shareholder;
             ShareholderParameter.Direction = ParameterDirection.Input;
-
-            SqlParameter ApprovedParameter = new SqlParameter();
-            ApprovedParameter.ParameterName = "@Approved";
-            ApprovedParameter.SqlDbType = SqlDbType.Char;
-            ApprovedParameter.Value = golfer.Approved;
-            ApprovedParameter.Direction = ParameterDirection.Input;
 
             SqlParameter ReturnCodeParameter = new SqlParameter();
             ReturnCodeParameter.ParameterName = "@ReturnCode";
@@ -301,9 +301,9 @@ namespace ClubBaist.Managers
             RecordMembershipApplicationCommand.Parameters.Add(CompanyAddressParameter);
             RecordMembershipApplicationCommand.Parameters.Add(CompanyPostalCodeParameter);
             RecordMembershipApplicationCommand.Parameters.Add(CompanyPhoneParameter);
-            RecordMembershipApplicationCommand.Parameters.Add(MembershipStartDateParameter);
+            RecordMembershipApplicationCommand.Parameters.Add(Sponser1Parameter);
+            RecordMembershipApplicationCommand.Parameters.Add(Sponser2Parameter);
             RecordMembershipApplicationCommand.Parameters.Add(ShareholderParameter);
-            RecordMembershipApplicationCommand.Parameters.Add(ApprovedParameter);
             RecordMembershipApplicationCommand.Parameters.Add(ReturnCodeParameter);
 
             try
